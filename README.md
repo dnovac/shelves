@@ -1,5 +1,11 @@
 # wishlistR
-Add your wishlist, share it with your friends and strategize your next gift to your friends
+Add your wishlist, share it with your friends and strategize your next gift to your friends.
+
+
+
+## Docker
+* Run `docker-compose up` or `docker-compose up --build`
+* Will start the app on localhost:8080, postgresdb:5432 and pgAdmin on localhost:5555
 
 
 ## Scripts
