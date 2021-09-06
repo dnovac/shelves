@@ -12,18 +12,19 @@ services:
       - postgres-data:/var/lib/postgresql/data
     container_name: postgres-container
 
-  server:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    env_file: .env
-    depends_on:
-      - database
-    networks:
-      - default
-    ports:
-      - '8080:8080'
-    container_name: wishlistr-server-container
+# Using start:dev while development
+#  server:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    env_file: .env
+#    depends_on:
+#      - database
+#    networks:
+#      - default
+#    ports:
+#      - '8080:8080'
+#    container_name: wishlistr-server-container
 
   pgadmin:
     image: dpage/pgadmin4
@@ -31,8 +32,7 @@ services:
       - database
     ports:
       - '5555:80'
-    env_file:
-      - .env
+    env_file: .env
     restart: unless-stopped
     container_name: pgadmin-container
 
