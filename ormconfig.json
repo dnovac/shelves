@@ -1,0 +1,15 @@
+{
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "admin",
+  "password": "admin",
+  "database": "wishlistr",
+  "synchronize": true,
+  "logging": false,
+  "entities": ["src/entity/*.ts", "modules/**/entity/*.ts"],
+  "migrations": ["src/migration/*.ts", "src/migration/*.sql"],
+  "cli": {
+    "migrationsDir": "migration"
+  }
+}
