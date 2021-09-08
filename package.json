@@ -36,7 +36,9 @@
     "morgan": "^1.10.0",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
+    "typedi": "^0.10.0",
     "typeorm": "^0.2.37",
+    "typeorm-typedi-extensions": "^0.4.1",
     "winston": "^3.3.3"
   }
 }

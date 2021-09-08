@@ -2,7 +2,11 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import express from 'express';
 import 'reflect-metadata';
-import { createConnection } from "typeorm";
+import { createConnection, useContainer } from "typeorm";
+import { Container } from 'typeorm-typedi-extensions';
+import { ItemsController } from './api/items.controller';
+import { UsersController } from './api/users.controller';
+import { WishlistsController } from './api/wishlists.controller';
 import morganMiddleware from './config/morganMiddleware'
 import Logger from "./lib/logger";
 
@@ -10,13 +14,27 @@ import Logger from "./lib/logger";
 class Server {
     private app: express.Application;
 
+    private wishlistsController: WishlistsController;
+    private itemsController: ItemsController;
+    private usersController: UsersController;
+
     constructor() {
         dotenv.config();
         this.app = express();
 
         this.initConfiguration();
         this.initDatabase();
+        /** Tell TypeORM to use the container provided by this lib to resolve it's dependencies. */
+        useContainer(Container);
+        this.initContainersDI();
+
         this.initRoutes();
+    }
+
+    private initContainersDI(): void {
+        this.wishlistsController = Container.get(WishlistsController);
+        this.itemsController = Container.get(ItemsController);
+        this.usersController = Container.get(UsersController);
     }
 
     /**
@@ -24,7 +42,6 @@ class Server {
      * @private
      */
     private initConfiguration() {
-        //this.app.set('port', port);
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cookieParser());
@@ -54,6 +71,10 @@ class Server {
         this.app.get('/', (req, res) => {
             res.send('Hello World');
         });
+
+        this.app.use('/api/wishlists/', this.wishlistsController.router);
+        this.app.use('/api/items/', this.itemsController.router);
+        this.app.use('/api/users/', this.usersController.router);
     }
 
     /**
