@@ -1,14 +1,13 @@
 import { Service } from 'typedi';
-//import { InjectRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Wishlist } from '../models/Wishlist';
 import { WishlistRepository } from '../repository/wishlist.repository';
 
 @Service()
 export class WishlistService {
 
-
     constructor(
-        //@InjectRepository(Wishlist)
+        @InjectRepository()
         private readonly wishlistRepository: WishlistRepository
     ) {
     }
