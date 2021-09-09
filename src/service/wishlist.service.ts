@@ -26,7 +26,7 @@ export class WishlistService {
         return await this.wishlistRepository.save(wishlist);
     }
 
-    async update(wishlistId: string, wishlistTitle: string) {
+    async update(wishlistId: number, wishlistTitle: string) {
         return await this.wishlistRepository.update(
             wishlistId,
             { title: wishlistTitle }

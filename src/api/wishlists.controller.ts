@@ -39,7 +39,7 @@ export class WishlistsController {
     }
 
     public async update(req: Request, res: Response) {
-        const wishlistId: string = req.params.id;
+        const wishlistId: number = parseInt(req.params.id);
         const title: string = req.body.title;
 
         if (!title) {
@@ -54,10 +54,7 @@ export class WishlistsController {
         return res.send(this.wishlistService.delete(wishlistId));
     }
 
-    /**
-     * Initializes the routes for the controller WishlistsController
-     * @private
-     */
+
     private initRoutes() {
         this.router.get('/', (req, res) => this.listAll(req, res));
         this.router.get('/:id', (req, res) => this.listById(req, res));

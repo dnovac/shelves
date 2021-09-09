@@ -1,29 +1,37 @@
 import { Service } from 'typedi';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { Item } from '../models/Item';
+import { ItemRepository } from '../repository/item.repository';
 
 @Service()
 export class ItemService {
 
-
-    constructor() {
+    constructor(
+        @InjectRepository()
+        private readonly itemRepository: ItemRepository
+    ) {
     }
 
-    async listAll(): Promise<string> {
-        return "list from service";
+    async listAll(): Promise<Item[]> {
+        return await this.itemRepository.find();
     }
 
-    public listById = () => {
-        return "byid from service";
+    async listById(itemId: number): Promise<Item | undefined> {
+        return await this.itemRepository.findOne(itemId);
     }
 
-    public add = () => {
-        return "add from service";
+    async add(item: Item): Promise<Item> {
+        return await this.itemRepository.save(item)
     }
 
-    public update = () => {
-        return "update from service";
+    async update(itemId: number, item: Item) {
+        return await this.itemRepository.update(
+            itemId,
+            item
+        );
     }
 
-    public delete = () => {
-        return "delete from service";
+    async delete(itemId: number) {
+        return this.itemRepository.delete(itemId);
     }
 }

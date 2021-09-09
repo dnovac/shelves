@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
+import { Item } from '../models/Item';
 import { ItemService } from '../service/item.service';
 
 @Service()
@@ -16,26 +17,30 @@ export class ItemsController {
     }
 
     public async listById(req: Request, res: Response) {
-        return res.send("listbyid");
+        const itemId: number = parseInt(req.params.id);
+        const item = await this.itemService.listById(itemId);
+        return res.send(item);
     }
 
     public async add(req: Request, res: Response) {
-        return res.send("add");
+        const item: Item = await this.itemService.add(
+            new Item(req.body.title, req.body.url, req.body.imageUrl)
+        );
+        return res.send(item);
     }
 
     public async update(req: Request, res: Response) {
-        return res.send("update");
+        const itemId: number = parseInt(req.params.id);
+        const item: Item = new Item(req.body.tile, req.body.url, req.body.imageUrl);
+        return res.send(await this.itemService.update(itemId, item));
     }
 
     public async delete(req: Request, res: Response) {
-        return res.send("delete");
+        const itemId: number = parseInt(req.params.id);
+        return res.send(this.itemService.delete(itemId));
     }
 
-    /**
-     *
-     * Initializes the routes for the controller ItemsController
-     * @private
-     */
+
     private initRoutes() {
         this.router.get('/', (req, res) => this.listAll(req, res));
         this.router.get('/:id', (req, res) => this.listById(req, res));

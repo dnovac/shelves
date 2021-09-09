@@ -97,6 +97,7 @@ import Logger from "./lib/logger";
 
 const main = async () => {
     const port = Number(process.env.SERVER_PORT || 8080);
+    await dotenv.config();
 
     const app = express();
     app.use(express.json());
@@ -104,10 +105,7 @@ const main = async () => {
     app.use(cookieParser());
     app.use(morganMiddleware);
 
-    await dotenv.config();
-
     await useContainer(Container);
-
     await createConnection()
         .then(() => {
             Logger.info('✅ Database was initialized successfully!');
@@ -128,7 +126,7 @@ const main = async () => {
     app.use('/api/items/', itemsController.router);
     app.use('/api/users/', usersController.router);
 
-    // App
+    // App Init
     app.listen(port, () => {
         Logger.debug(`✅ WishlistR server started at http://localhost:${ port }`);
     });
@@ -137,5 +135,5 @@ const main = async () => {
 // Start App
 main().catch(err => {
     // eslint-disable-next-line no-console
-    console.log(err);
+    console.log(`Something very bad happened${err}`);
 });
