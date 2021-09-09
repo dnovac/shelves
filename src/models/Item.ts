@@ -4,7 +4,7 @@ import { Wishlist } from './Wishlist';
 @Entity({ name: 'items' })
 export class Item {
 
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ length: 255, name: 'title' })

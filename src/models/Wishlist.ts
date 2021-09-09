@@ -13,7 +13,7 @@ import { User } from './User';
 @Entity({ name: 'wishlists' })
 export class Wishlist {
 
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ length: 255, name: 'title' })

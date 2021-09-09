@@ -1,5 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
+import Logger from '../lib/logger';
+import { Wishlist } from '../models/Wishlist';
 import { WishlistService } from '../service/wishlist.service';
 
 
@@ -21,19 +23,35 @@ export class WishlistsController {
     }
 
     public async listById(req: Request, res: Response) {
-        return res.send(this.wishlistService.listById());
+        const wishlistId: number = parseInt(req.params.id);
+        const wishlist = await this.wishlistService.listById(wishlistId);
+        return res.send(wishlist);
     }
 
     public async add(req: Request, res: Response) {
-        return res.send(this.wishlistService.add());
+        const title: string = req.body.title;
+        if (!title) {
+            Logger.warn('Title is null')
+            return res.status(400).send('Title should have a value.');
+        }
+        const wishlist: Wishlist = await this.wishlistService.add(title);
+        return res.send(wishlist);
     }
 
     public async update(req: Request, res: Response) {
-        return res.send(this.wishlistService.update());
+        const wishlistId: string = req.params.id;
+        const title: string = req.body.title;
+
+        if (!title) {
+            Logger.warn('Title is null.')
+            return res.status(400).send('Title should have a value.');
+        }
+        return res.send(this.wishlistService.update(wishlistId, title));
     }
 
     public async delete(req: Request, res: Response) {
-        return res.send(this.wishlistService.delete());
+        const wishlistId: number = parseInt(req.params.id);
+        return res.send(this.wishlistService.delete(wishlistId));
     }
 
     /**

@@ -16,20 +16,25 @@ export class WishlistService {
         return await this.wishlistRepository.find();
     }
 
-    public listById = () => {
-        return "byid from service";
+    async listById(wishlistId: number): Promise<Wishlist | undefined> {
+        return await this.wishlistRepository.findOne(wishlistId)
     }
 
-    async add(): Promise<Wishlist> {
-        return this.wishlistRepository.create();
+    async add(wishlistTitle: string): Promise<Wishlist> {
+        const wishlist: Wishlist = this.wishlistRepository.create();
+        wishlist.title = wishlistTitle;
+        return await this.wishlistRepository.save(wishlist);
     }
 
-    public update = () => {
-        return "update from service";
+    async update(wishlistId: string, wishlistTitle: string) {
+        return await this.wishlistRepository.update(
+            wishlistId,
+            { title: wishlistTitle }
+        );
     }
 
-    public delete = () => {
-        return "delete from service";
+    async delete(wishlistId: number) {
+        return this.wishlistRepository.delete(wishlistId);
     }
 
 
