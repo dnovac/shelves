@@ -26,10 +26,10 @@ export class WishlistService {
         return await this.wishlistRepository.save(wishlist);
     }
 
-    async update(wishlistId: number, wishlistTitle: string) {
+    async update(wishlistId: number, wishlist: Wishlist) {
         return await this.wishlistRepository.update(
             wishlistId,
-            { title: wishlistTitle }
+            wishlist
         );
     }
 

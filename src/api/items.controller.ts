@@ -24,14 +24,14 @@ export class ItemsController {
 
     public async add(req: Request, res: Response) {
         const item: Item = await this.itemService.add(
-            new Item(req.body.title, req.body.url, req.body.imageUrl)
+            new Item(req.body.title, req.body.url, req.body.imageUrl, req.body.wishlist)
         );
         return res.send(item);
     }
 
     public async update(req: Request, res: Response) {
         const itemId: number = parseInt(req.params.id);
-        const item: Item = new Item(req.body.tile, req.body.url, req.body.imageUrl);
+        const item: Item = new Item(req.body.title, req.body.url, req.body.imageUrl, req.body.wishlist);
         return res.send(await this.itemService.update(itemId, item));
     }
 

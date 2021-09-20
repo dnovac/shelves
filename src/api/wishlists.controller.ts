@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
 import Logger from '../lib/logger';
+import { User } from '../models/User';
 import { Wishlist } from '../models/Wishlist';
 import { WishlistService } from '../service/wishlist.service';
 
@@ -41,12 +42,15 @@ export class WishlistsController {
     public async update(req: Request, res: Response) {
         const wishlistId: number = parseInt(req.params.id);
         const title: string = req.body.title;
+        const user: User = req.body.user as User;
 
         if (!title) {
             Logger.warn('Title is null.')
             return res.status(400).send('Title should have a value.');
         }
-        return res.send(this.wishlistService.update(wishlistId, title));
+        const wishlistToInsert: Wishlist = new Wishlist(title, user);
+
+        return res.send(await this.wishlistService.update(wishlistId, wishlistToInsert));
     }
 
     public async delete(req: Request, res: Response) {

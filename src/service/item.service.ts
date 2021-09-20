@@ -27,7 +27,12 @@ export class ItemService {
     async update(itemId: number, item: Item) {
         return await this.itemRepository.update(
             itemId,
-            item
+            {
+                title: item.title,
+                url: item.url,
+                imageUrl: item.imageUrl,
+                wishlist: item.wishlist,
+            }
         );
     }
 

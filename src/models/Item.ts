@@ -25,10 +25,11 @@ export class Item {
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
 
-    constructor(title: string, url: string, imageUrl: string) {
+    constructor(title: string, url: string, imageUrl: string, wishlist: Wishlist) {
         this.title = title;
         this.url = url;
         this.imageUrl = imageUrl;
+        this.wishlist = wishlist;
         this.createdAt = new Date();
         this.updatedAt = new Date();
     }

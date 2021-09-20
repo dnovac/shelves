@@ -32,8 +32,9 @@ export class Wishlist {
     updatedAt: Date;
 
 
-    constructor(title: string) {
+    constructor(title: string, user: User) {
         this.title = title;
+        this.user = user;
         this.createdAt = new Date();
         this.updatedAt = new Date();
     }
