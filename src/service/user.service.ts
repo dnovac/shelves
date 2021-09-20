@@ -4,6 +4,7 @@ import { Service } from 'typedi';
 export class UserService {
 
     constructor() {
+        //no-empty
     }
 
     async listAll(): Promise<string> {
