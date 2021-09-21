@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Item } from '../models/Item';
+import { Item } from '../model/Item';
 import { ItemRepository } from '../repository/item.repository';
 
 @Service()
@@ -20,7 +20,7 @@ export class ItemService {
         return await this.itemRepository.findOne(itemId);
     }
 
-    async add(item: Item): Promise<Item> {
+    async save(item: Item): Promise<Item> {
         return await this.itemRepository.save(item)
     }
 

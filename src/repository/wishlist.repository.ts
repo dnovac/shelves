@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { EntityRepository, Repository } from 'typeorm';
-import { Wishlist } from '../models/Wishlist';
+import { Wishlist } from '../model/Wishlist';
 
 @Service()
 @EntityRepository(Wishlist)

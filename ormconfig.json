@@ -7,7 +7,7 @@
   "database": "wishlistr",
   "synchronize": true,
   "logging": false,
-  "entities": ["src/models/*.ts", "modules/**/models/*.ts"],
+  "entities": ["src/model/*.ts", "modules/**/model/*.ts"],
   "migrations": ["src/migration/*.ts", "src/migration/*.sql"],
   "cli": {
     "migrationsDir": "migration"

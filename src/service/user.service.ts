@@ -1,29 +1,32 @@
 import { Service } from 'typedi';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { IUser } from '../model/interfaces/user';
+import { User } from '../model/User';
+import { UserRepository } from '../repository/user.repository';
 
 @Service()
 export class UserService {
+
+    @InjectRepository()
+    private readonly userRepository: UserRepository
 
     constructor() {
         //no-empty
     }
 
-    async listAll(): Promise<string> {
-        return "list from service";
+    //ToDo: map everything to User interface
+
+    public async listAll(): Promise<any> {
+        return await this.userRepository.find();
     }
 
-    public listById = () => {
-        return "byid from service";
+    public async listByEmail(email: string): Promise<any> {
+        return await this.userRepository.findOne({ email });
     }
 
-    public add = () => {
-        return "add from service";
+    public async save(userOptions: IUser): Promise<any> {
+        const user: User = new User(userOptions);
+        return await this.userRepository.save(user);
     }
 
-    public update = () => {
-        return "update from service";
-    }
-
-    public delete = () => {
-        return "delete from service";
-    }
 }

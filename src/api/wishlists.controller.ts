@@ -1,8 +1,8 @@
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
 import Logger from '../lib/logger';
-import { User } from '../models/User';
-import { Wishlist } from '../models/Wishlist';
+import { User } from '../model/User';
+import { Wishlist } from '../model/Wishlist';
 import { WishlistService } from '../service/wishlist.service';
 
 
@@ -35,7 +35,7 @@ export class WishlistsController {
             Logger.warn('Title is null')
             return res.status(400).send('Title should have a value.');
         }
-        const wishlist: Wishlist = await this.wishlistService.add(title);
+        const wishlist: Wishlist = await this.wishlistService.save(title);
         return res.send(wishlist);
     }
 

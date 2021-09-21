@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Wishlist } from '../models/Wishlist';
+import { Wishlist } from '../model/Wishlist';
 import { WishlistRepository } from '../repository/wishlist.repository';
 
 @Service()
@@ -20,7 +20,7 @@ export class WishlistService {
         return await this.wishlistRepository.findOne(wishlistId)
     }
 
-    async add(wishlistTitle: string): Promise<Wishlist> {
+    async save(wishlistTitle: string): Promise<Wishlist> {
         const wishlist: Wishlist = this.wishlistRepository.create();
         wishlist.title = wishlistTitle;
         return await this.wishlistRepository.save(wishlist);

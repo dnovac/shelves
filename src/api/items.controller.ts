@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
-import { Item } from '../models/Item';
+import { Item } from '../model/Item';
 import { ItemService } from '../service/item.service';
 
 @Service()
@@ -23,7 +23,7 @@ export class ItemsController {
     }
 
     public async add(req: Request, res: Response) {
-        const item: Item = await this.itemService.add(
+        const item: Item = await this.itemService.save(
             new Item(req.body.title, req.body.url, req.body.imageUrl, req.body.wishlist)
         );
         return res.send(item);

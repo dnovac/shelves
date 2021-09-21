@@ -106,13 +106,17 @@ const main = async () => {
     app.use(morganMiddleware);
 
     await useContainer(Container);
+
     await createConnection()
-        .then(() => {
+        .then(async (conn) => {
             Logger.info('✅ Database was initialized successfully!');
+            // ToDo: remove it after dev finished
+            await conn.synchronize();
         })
         .catch((err) => {
             Logger.error(`Error while initializing database! Error: ${ err }`);
         });
+
 
     const wishlistsController = Container.get(WishlistsController);
     const itemsController = Container.get(ItemsController);
