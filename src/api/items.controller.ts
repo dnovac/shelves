@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
+import authMiddleware from '../middleware/authentication';
 import { Item } from '../model/Item';
 import { ItemService } from '../service/item.service';
 
@@ -42,11 +43,11 @@ export class ItemsController {
 
 
     private initRoutes() {
-        this.router.get('/', (req, res) => this.listAll(req, res));
-        this.router.get('/:id', (req, res) => this.listById(req, res));
-        this.router.post('/', (req, res) => this.add(req, res));
-        this.router.put('/:id', (req, res) => this.update(req, res));
-        this.router.delete('/:id', (req, res) => this.delete(req, res));
+        this.router.get('/', authMiddleware, (req, res) => this.listAll(req, res));
+        this.router.get('/:id', authMiddleware, (req, res) => this.listById(req, res));
+        this.router.post('/', authMiddleware, (req, res) => this.add(req, res));
+        this.router.put('/:id', authMiddleware, (req, res) => this.update(req, res));
+        this.router.delete('/:id', authMiddleware, (req, res) => this.delete(req, res));
 
     }
 }

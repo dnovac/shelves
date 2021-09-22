@@ -2,6 +2,7 @@ import * as bcrypt from 'bcryptjs';
 import { Request, Response, Router } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
+import Logger from '../lib/logger';
 import { UserService } from '../service/user.service';
 
 @Service()
@@ -28,6 +29,7 @@ export class UsersController {
 
             // check if user already exist
             // Validate if user exist in our database
+            // todo: username should also be unique
             const oldUser = await this.userService.listByEmail(email);
 
             if (oldUser) {
@@ -37,8 +39,9 @@ export class UsersController {
             //Encrypt user password
             const encryptedPassword = await bcrypt.hash(password, 10);
 
+
             // Create user in our database
-            const user = await this.userService.save({
+            const { id } = await this.userService.save({
                 username,
                 firstName,
                 lastName,
@@ -49,28 +52,52 @@ export class UsersController {
 
             // Create token
             const token = jwt.sign(
-                { user_id: user.id, email },
+                { user_id: id, email },
                 process.env.TOKEN_KEY as string,
                 {
                     expiresIn: process.env.TOKEN_EXPIRATION_TIME,
                 }
             );
             // save user token
-            user.token = token;
+            //user.token = token;
 
             // return new user
-            res.status(201).json(user);
+            res.status(201).json({ token: token });
         } catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
+            Logger.error(err);
+            res.status(500).send('An error occurred');
         }
-        // Our register logic ends here
-        return res.send('Registering');
-        //return res.send(await this.userService.listAll());
     }
 
     public async login(req: Request, res: Response) {
-        return res.send('Logginingin');
+        try {
+            // Get user input
+            const { email, password, username } = req.body;
+
+            // Validate user input
+            if (!(email && password && username)) {
+                res.status(400).send("All input is required");
+            }
+            // Validate if user exist in our database
+            const user = await this.userService.listByEmail(email);
+
+            if (user && (await bcrypt.compare(password, user.password))) {
+                // Create token
+                const token = jwt.sign(
+                    { user_id: user._id, email },
+                    process.env.TOKEN_KEY as string,
+                    {
+                        expiresIn: process.env.TOKEN_EXPIRATION_TIME,
+                    }
+                );
+
+                res.status(200).json({ token });
+            }
+            res.status(400).send("Invalid Credentials");
+        } catch (err) {
+            Logger.error(err);
+            res.status(500).send('An error occurred');
+        }
         //return res.send(await this.userService.listAll());
     }
 
@@ -95,7 +122,7 @@ export class UsersController {
      * @private
      */
     private initRoutes() {
-        this.router.post('/register', (req, res) => this.register(req, res));
+        this.router.post('/register',  (req, res) => this.register(req, res));
         this.router.post('/login', (req, res) => this.login(req, res));
         // this.router.get('/', (req, res) => this.listAll(req, res));
         // this.router.get('/:id', (req, res) => this.listById(req, res));

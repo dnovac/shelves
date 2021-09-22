@@ -8,7 +8,7 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 255, name: 'username' })
+    @Column({ length: 255, name: 'username', unique: true })
     username: string;
 
     @Column({ length: 255, name: 'first_name', nullable: true })
@@ -33,7 +33,7 @@ export class User {
     updatedAt: Date;
 
     @Column({ nullable: true })
-    token: string;
+    token?: string;
 
     @Column()
     password: string;
@@ -45,6 +45,8 @@ export class User {
             this.lastName = userOptions.lastName;
             this.age = userOptions.age;
             this.email = userOptions.email;
+            this.password = userOptions.password;
+            this.token = userOptions.token;
             this.createdAt = new Date();
             this.updatedAt = new Date();
         }

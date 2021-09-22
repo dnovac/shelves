@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
 import Logger from '../lib/logger';
+import authMiddleware from '../middleware/authentication';
 import { User } from '../model/User';
 import { Wishlist } from '../model/Wishlist';
 import { WishlistService } from '../service/wishlist.service';
@@ -60,10 +61,10 @@ export class WishlistsController {
 
 
     private initRoutes() {
-        this.router.get('/', (req, res) => this.listAll(req, res));
-        this.router.get('/:id', (req, res) => this.listById(req, res));
-        this.router.post('/', (req, res) => this.add(req, res));
-        this.router.put('/:id', (req, res) => this.update(req, res));
-        this.router.delete('/:id', (req, res) => this.delete(req, res));
+        this.router.get('/', authMiddleware, (req, res) => this.listAll(req, res));
+        this.router.get('/:id', authMiddleware, (req, res) => this.listById(req, res));
+        this.router.post('/', authMiddleware,  (req, res) => this.add(req, res));
+        this.router.put('/:id', authMiddleware, (req, res) => this.update(req, res));
+        this.router.delete('/:id', authMiddleware, (req, res) => this.delete(req, res));
     }
 }
