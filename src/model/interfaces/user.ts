@@ -5,6 +5,5 @@ export interface IUser {
     lastName?: string;
     age?: number;
     email: string;
-    token?: string;
     password: string;
 }

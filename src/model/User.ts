@@ -20,7 +20,7 @@ export class User {
     @Column({ name: 'age', nullable: true })
     age?: number;
 
-    @Column({ name: 'email' })
+    @Column({ name: 'email', unique: true })
     email: string;
 
     @OneToMany(() => Wishlist, wishlist => wishlist.user, { nullable: true })
@@ -31,9 +31,6 @@ export class User {
 
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
-
-    @Column({ nullable: true })
-    token?: string;
 
     @Column()
     password: string;
@@ -46,7 +43,6 @@ export class User {
             this.age = userOptions.age;
             this.email = userOptions.email;
             this.password = userOptions.password;
-            this.token = userOptions.token;
             this.createdAt = new Date();
             this.updatedAt = new Date();
         }

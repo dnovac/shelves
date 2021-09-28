@@ -30,15 +30,13 @@ export class UsersController {
             // check if user already exist
             // Validate if user exist in our database
             // todo: username should also be unique
-            const oldUser = await this.userService.listByEmail(email);
-
-            if (oldUser) {
+            const alreadyExists = await this.userService.isAlreadyInDb(username);
+            if (alreadyExists) {
                 return res.status(409).send("User Already Exist. Please Login");
             }
 
             //Encrypt user password
             const encryptedPassword = await bcrypt.hash(password, 10);
-
 
             // Create user in our database
             const { id } = await this.userService.save({
@@ -101,21 +99,6 @@ export class UsersController {
         //return res.send(await this.userService.listAll());
     }
 
-    public async listById(req: Request, res: Response) {
-        return res.send("listbyid");
-    }
-
-    public async add(req: Request, res: Response) {
-        return res.send("add");
-    }
-
-    public async update(req: Request, res: Response) {
-        return res.send("update");
-    }
-
-    public async delete(req: Request, res: Response) {
-        return res.send("delete");
-    }
 
     /**
      * Initializes the routes for the controller UsersController
@@ -124,10 +107,5 @@ export class UsersController {
     private initRoutes() {
         this.router.post('/register',  (req, res) => this.register(req, res));
         this.router.post('/login', (req, res) => this.login(req, res));
-        // this.router.get('/', (req, res) => this.listAll(req, res));
-        // this.router.get('/:id', (req, res) => this.listById(req, res));
-        // this.router.post('/', (req, res) => this.add(req, res));
-        // this.router.put('/:id', (req, res) => this.update(req, res));
-        // this.router.delete('/:id', (req, res) => this.delete(req, res));
     }
 }
