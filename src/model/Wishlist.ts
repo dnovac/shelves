@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
     Column,
     CreateDateColumn,
@@ -23,6 +24,7 @@ export class Wishlist {
     items: Item[];
 
     @ManyToOne(() => User, user => user.wishlists)
+    @Exclude()
     user: User;
 
     @CreateDateColumn({ name: 'created_at' })
@@ -31,11 +33,4 @@ export class Wishlist {
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
 
-
-    constructor(title: string, user: User) {
-        this.title = title;
-        this.user = user;
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-    }
 }

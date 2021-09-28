@@ -9,10 +9,10 @@ import { UserService } from '../service/user.service';
 export class UsersController {
     public router: Router;
 
-    @Inject()
-    private readonly userService: UserService
-
-    constructor() {
+    constructor(
+        @Inject()
+        private readonly userService: UserService
+    ) {
         this.router = Router();
         this.initRoutes();
     }
@@ -24,7 +24,7 @@ export class UsersController {
 
             // Validate user input
             if (!(email && password && username)) {
-                res.status(400).send("All input is required");
+                return res.status(400).send("All input is required");
             }
 
             // check if user already exist
@@ -60,10 +60,10 @@ export class UsersController {
             //user.token = token;
 
             // return new user
-            res.status(201).json({ token: token });
+            return res.status(201).json({ token: token });
         } catch (err) {
             Logger.error(err);
-            res.status(500).send('An error occurred');
+            return res.status(500).send('An error occurred');
         }
     }
 

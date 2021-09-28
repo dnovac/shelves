@@ -1,5 +1,7 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import Logger from '../lib/logger';
+import { IWishlist } from '../model/interfaces/wishlist';
 import { Wishlist } from '../model/Wishlist';
 import { WishlistRepository } from '../repository/wishlist.repository';
 
@@ -12,24 +14,35 @@ export class WishlistService {
     ) {
     }
 
-    async listAll(): Promise<Wishlist[]> {
+    async listAll(): Promise<IWishlist[]> {
         return await this.wishlistRepository.find();
     }
 
-    async listById(wishlistId: number): Promise<Wishlist | undefined> {
-        return await this.wishlistRepository.findOne(wishlistId)
+    async listById(wishlistId: number): Promise<IWishlist | null> {
+        const wishlist: Wishlist | undefined = await this.wishlistRepository.findOne(wishlistId);
+        if (!wishlist) {
+            return null;
+            //ToDo: maybe can use await this.repo ?? null (nullish)
+        }
+        return wishlist;
     }
 
-    async save(wishlistTitle: string): Promise<Wishlist> {
-        const wishlist: Wishlist = this.wishlistRepository.create();
-        wishlist.title = wishlistTitle;
-        return await this.wishlistRepository.save(wishlist);
+    async save(wishlistProperties: IWishlist): Promise<IWishlist> {
+        try {
+            return await this.wishlistRepository.save(wishlistProperties);
+        } catch (e) {
+            // todo: rather than check the not-null attributes in controller/service
+            // create custom exceptions and throw them from here
+            // not null; unique; etc
+            Logger.error('An error occurred');
+            throw new Error('An error occurred while saving wishlists');
+        }
     }
 
-    async update(wishlistId: number, wishlist: Wishlist) {
+    async update(id: number, wishlistProperties: IWishlist) {
         return await this.wishlistRepository.update(
-            wishlistId,
-            wishlist
+            id,
+            wishlistProperties
         );
     }
 

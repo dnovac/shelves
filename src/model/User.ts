@@ -1,3 +1,4 @@
+import { IsEmail } from 'class-validator';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { IUser } from './interfaces/user';
 import { Wishlist } from './Wishlist';
@@ -21,6 +22,7 @@ export class User implements IUser{
     age?: number;
 
     @Column({ name: 'email', unique: true })
+    @IsEmail()
     email: string;
 
     @OneToMany(() => Wishlist, wishlist => wishlist.user, { nullable: true })

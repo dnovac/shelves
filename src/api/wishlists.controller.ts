@@ -1,9 +1,8 @@
 import { Request, Response, Router } from 'express';
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import Logger from '../lib/logger';
 import authMiddleware from '../middleware/authentication';
-import { User } from '../model/User';
-import { Wishlist } from '../model/Wishlist';
+import { IWishlist } from '../model/interfaces/wishlist';
 import { WishlistService } from '../service/wishlist.service';
 
 
@@ -13,6 +12,7 @@ export class WishlistsController {
     public router: Router;
 
     constructor(
+        @Inject()
         private readonly wishlistService: WishlistService
     ) {
         this.router = Router();
@@ -20,42 +20,38 @@ export class WishlistsController {
     }
 
     public async listAll(req: Request, res: Response) {
-        const wishlists = await this.wishlistService.listAll();
-        return res.send(wishlists);
+        res.send(await this.wishlistService.listAll());
     }
 
     public async listById(req: Request, res: Response) {
         const wishlistId: number = parseInt(req.params.id);
-        const wishlist = await this.wishlistService.listById(wishlistId);
-        return res.send(wishlist);
+        if (!wishlistId) {
+            Logger.error('missing id when trying to listById');
+            throw new Error('Id must be provided in order to fetch an wishlist by id.');
+        }
+        res.send(await this.wishlistService.listById(wishlistId));
     }
 
-    public async add(req: Request, res: Response) {
-        const title: string = req.body.title;
-        if (!title) {
-            Logger.warn('Title is null')
-            return res.status(400).send('Title should have a value.');
-        }
-        const wishlist: Wishlist = await this.wishlistService.save(title);
-        return res.send(wishlist);
+    public async save(req: Request, res: Response) {
+        const wishlist: IWishlist = req.body;
+        res.send(await this.wishlistService.save(wishlist));
     }
 
     public async update(req: Request, res: Response) {
         const wishlistId: number = parseInt(req.params.id);
-        const title: string = req.body.title;
-        const user: User = req.body.user as User;
-
-        if (!title) {
-            Logger.warn('Title is null.')
-            return res.status(400).send('Title should have a value.');
+        if (!wishlistId) {
+            throw new Error('An id must be provided in order to update an wishlist');
         }
-        const wishlistToInsert: Wishlist = new Wishlist(title, user);
+        const wishlist: IWishlist = req.body;
 
-        return res.send(await this.wishlistService.update(wishlistId, wishlistToInsert));
+        return res.send(await this.wishlistService.update(wishlistId, wishlist));
     }
 
     public async delete(req: Request, res: Response) {
         const wishlistId: number = parseInt(req.params.id);
+        if (!wishlistId) {
+            throw new Error('An id must be provided in order to update an wishlist');
+        }
         return res.send(this.wishlistService.delete(wishlistId));
     }
 
@@ -63,7 +59,7 @@ export class WishlistsController {
     private initRoutes() {
         this.router.get('/', authMiddleware, (req, res) => this.listAll(req, res));
         this.router.get('/:id', authMiddleware, (req, res) => this.listById(req, res));
-        this.router.post('/', authMiddleware,  (req, res) => this.add(req, res));
+        this.router.post('/', authMiddleware, (req, res) => this.save(req, res));
         this.router.put('/:id', authMiddleware, (req, res) => this.update(req, res));
         this.router.delete('/:id', authMiddleware, (req, res) => this.delete(req, res));
     }
