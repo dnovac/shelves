@@ -14,17 +14,23 @@ export class UserService {
         //no-empty
     }
 
-    //ToDo: map everything to User interface
-
-    public async listByEmail(email: string): Promise<any> {
-        return await this.userRepository.findOne({ email });
+    public async listByEmail(email: string): Promise<IUser | null> {
+        const user: IUser | undefined = await this.userRepository.findOne({ email });
+        if(!user) {
+            return null;
+        }
+        return user;
     }
 
-    public async listByUsername(username: string): Promise<any> {
-        return await this.userRepository.findOne({ username });
+    public async listByUsername(username: string): Promise<IUser | null> {
+        const user: IUser | undefined = await this.userRepository.findOne({ username });
+        if(!user) {
+            return null;
+        }
+        return user;
     }
 
-    public async save(userOptions: IUser): Promise<any> {
+    public async save(userOptions: IUser): Promise<IUser> {
         const user: User = new User(userOptions);
         return await this.userRepository.save(user);
     }

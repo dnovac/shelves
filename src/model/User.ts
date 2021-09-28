@@ -3,7 +3,7 @@ import { IUser } from './interfaces/user';
 import { Wishlist } from './Wishlist';
 
 @Entity({ name: 'users' })
-export class User {
+export class User implements IUser{
 
     @PrimaryGeneratedColumn()
     id: number;

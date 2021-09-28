@@ -82,21 +82,20 @@ export class UsersController {
             if (user && (await bcrypt.compare(password, user.password))) {
                 // Create token
                 const token = jwt.sign(
-                    { user_id: user._id, email },
+                    { user_id: user.id, email },
                     process.env.TOKEN_KEY as string,
                     {
                         expiresIn: process.env.TOKEN_EXPIRATION_TIME,
                     }
                 );
-
                 res.status(200).json({ token });
+            } else {
+                res.status(400).send("Invalid Credentials");
             }
-            res.status(400).send("Invalid Credentials");
         } catch (err) {
             Logger.error(err);
             res.status(500).send('An error occurred');
         }
-        //return res.send(await this.userService.listAll());
     }
 
 
@@ -105,7 +104,7 @@ export class UsersController {
      * @private
      */
     private initRoutes() {
-        this.router.post('/register',  (req, res) => this.register(req, res));
+        this.router.post('/register', (req, res) => this.register(req, res));
         this.router.post('/login', (req, res) => this.login(req, res));
     }
 }
