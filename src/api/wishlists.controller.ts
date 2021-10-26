@@ -32,9 +32,14 @@ export class WishlistsController {
         res.send(await this.wishlistService.listById(wishlistId));
     }
 
-    public async save(req: Request, res: Response) {
+    public async save(req: Request, res: Response): Promise<IWishlist | undefined> {
         const wishlist: IWishlist = req.body;
-        res.send(await this.wishlistService.save(wishlist));
+        try {
+            return await this.wishlistService.save(wishlist);
+        } catch (err) {
+            res.send(err);
+            return;
+        }
     }
 
     public async update(req: Request, res: Response) {

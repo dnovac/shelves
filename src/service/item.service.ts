@@ -32,10 +32,7 @@ export class ItemService {
         return await this.itemRepository.update(
             itemId,
             {
-                title: item.title,
-                url: item.url,
-                imageUrl: item.imageUrl,
-                wishlist: item.wishlist,
+                ...item
             }
         );
     }
