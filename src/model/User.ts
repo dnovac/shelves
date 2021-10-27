@@ -1,6 +1,6 @@
 import { IsEmail } from 'class-validator';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { IUser } from './interfaces/user';
+import { IUser } from './i-user';
 import { Wishlist } from './Wishlist';
 
 @Entity({ name: 'users' })

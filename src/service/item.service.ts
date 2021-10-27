@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { IItem } from '../model/interfaces/item';
+import { IItem } from '../model/i-item';
 import { ItemRepository } from '../repository/item.repository';
 
 @Service()
@@ -12,11 +12,11 @@ export class ItemService {
     ) {
     }
 
-    async listAll(): Promise<IItem[]> {
+    async findAll(): Promise<IItem[]> {
         return await this.itemRepository.find();
     }
 
-    async listById(itemId: number): Promise<IItem | null> {
+    async findById(itemId: number): Promise<IItem | null> {
         const itemFromDb: IItem | undefined = await this.itemRepository.findOne(itemId);
         if(!itemFromDb) {
             return null;

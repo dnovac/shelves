@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { IUser } from '../model/interfaces/user';
+import { IUser } from '../model/i-user';
 import { User } from '../model/User';
 import { UserRepository } from '../repository/user.repository';
 
@@ -14,7 +14,7 @@ export class UserService {
         //no-empty
     }
 
-    public async listByEmail(email: string): Promise<IUser | null> {
+    public async findByEmail(email: string): Promise<IUser | null> {
         const user: IUser | undefined = await this.userRepository.findOne({ email });
         if(!user) {
             return null;
@@ -22,7 +22,7 @@ export class UserService {
         return user;
     }
 
-    public async listByUsername(username: string): Promise<IUser | null> {
+    public async findByUsername(username: string): Promise<IUser | null> {
         const user: IUser | undefined = await this.userRepository.findOne({ username });
         if(!user) {
             return null;

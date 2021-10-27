@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
 import authMiddleware from '../middleware/authentication';
-import { IItem } from '../model/interfaces/item';
+import { IItem } from '../model/i-item';
 import { ItemService } from '../service/item.service';
 
 @Service()
@@ -16,14 +16,14 @@ export class ItemsController {
         this.initRoutes();
     }
 
-    public async listAll(req: Request, res: Response) {
-        return res.send(await this.itemService.listAll());
+    public async findAll(req: Request, res: Response) {
+        return res.send(await this.itemService.findAll());
     }
 
-    public async listById(req: Request, res: Response) {
+    public async findById(req: Request, res: Response) {
         const itemId: number = parseInt(req.params.id);
 
-        return res.send(await this.itemService.listById(itemId));
+        return res.send(await this.itemService.findById(itemId));
     }
 
     public async save(req: Request, res: Response) {
@@ -53,8 +53,8 @@ export class ItemsController {
 
 
     private initRoutes() {
-        this.router.get('/', authMiddleware, (req, res) => this.listAll(req, res));
-        this.router.get('/:id', authMiddleware, (req, res) => this.listById(req, res));
+        this.router.get('/', authMiddleware, (req, res) => this.findAll(req, res));
+        this.router.get('/:id', authMiddleware, (req, res) => this.findById(req, res));
         this.router.post('/', authMiddleware, (req, res) => this.save(req, res));
         this.router.put('/:id', authMiddleware, (req, res) => this.update(req, res));
         this.router.delete('/:id', authMiddleware, (req, res) => this.delete(req, res));

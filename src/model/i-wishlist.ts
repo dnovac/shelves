@@ -1,4 +1,4 @@
-import { IItem } from './item';
+import { IItem } from './i-item';
 
 export interface IWishlist {
     id?: number;
