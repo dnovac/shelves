@@ -28,7 +28,7 @@ export class ItemsController {
 
     public async save(req: Request, res: Response) {
         const itemOptions: IItem = req.body;
-        const item: IItem = await this.itemService.save(
+        const item = await this.itemService.save(
             itemOptions
         );
         return res.send(item);

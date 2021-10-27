@@ -2,7 +2,6 @@ import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import Logger from '../lib/logger';
 import { IWishlist } from '../model/i-wishlist';
-import { Wishlist } from '../model/Wishlist';
 import { WishlistRepository } from '../repository/wishlist.repository';
 
 @Service()
@@ -15,16 +14,15 @@ export class WishlistService {
   }
 
   async findAll(): Promise<IWishlist[]> {
-    return await this.wishlistRepository.find();
+    return await this.wishlistRepository.find({
+      relations: ['items'],
+    });
   }
 
   async findById(wishlistId: number): Promise<IWishlist | null> {
-    const wishlist: Wishlist | undefined = await this.wishlistRepository.findOne(wishlistId);
-    if (!wishlist) {
-      return null;
-      //ToDo: maybe can use await this.repo ?? null (nullish)
-    }
-    return wishlist;
+    return await this.wishlistRepository.findOne(wishlistId, {
+      relations: ['items'],
+    }) ?? null;
   }
 
   async save(wishlistProperties: IWishlist): Promise<IWishlist> {

@@ -16,8 +16,8 @@ export class Item {
   @Column({ type: 'text', name: 'image_url', nullable: true })
   imageUrl: string;
 
-    @ManyToOne(() => Wishlist, wishlist => wishlist.items)
-    wishlist: Wishlist;
+  @ManyToOne(() => Wishlist, wishlist => wishlist.items, { nullable: false })
+  wishlist: Wishlist;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
