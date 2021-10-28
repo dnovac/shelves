@@ -4,9 +4,10 @@ import * as jwt from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
 import Logger from '../lib/logger';
 import { UserService } from '../service/user.service';
+import authMiddleware from '../middleware/authentication';
 
 @Service()
-export class UsersController {
+export class UserController {
     public router: Router;
 
     constructor(
@@ -98,12 +99,18 @@ export class UsersController {
         }
     }
 
+    public async findWishlistsByUsername(req: Request, res: Response) {
+        const username: string = req.params.username;
+        res.send(await this.userService.findWishlistsByUsername(username));
+    }
+
 
     /**
      * Initializes the routes for the controller UsersController
      * @private
      */
     private initRoutes() {
+        this.router.get('/wishlists/:username', authMiddleware, (req, res) => this.findWishlistsByUsername(req, res));
         this.router.post('/register', (req, res) => this.register(req, res));
         this.router.post('/login', (req, res) => this.login(req, res));
     }

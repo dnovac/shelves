@@ -4,7 +4,7 @@ import { IUser } from './i-user';
 import { Wishlist } from './Wishlist';
 
 @Entity({ name: 'users' })
-export class User implements IUser{
+export class User implements IUser {
 
     @PrimaryGeneratedColumn()
     id: number;
