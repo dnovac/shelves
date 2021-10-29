@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Wishlist } from './Wishlist';
 
-@Entity({ name: 'items' })
+@Entity({ name: 'item' })
 export class Item {
 
   @PrimaryGeneratedColumn()

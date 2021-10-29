@@ -3,7 +3,7 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
 import { IUser } from './i-user';
 import { Wishlist } from './Wishlist';
 
-@Entity({ name: 'users' })
+@Entity({ name: 'user' })
 export class User implements IUser {
 
     @PrimaryGeneratedColumn()

@@ -4,10 +4,10 @@ import express from 'express';
 import 'reflect-metadata';
 import { createConnection, useContainer } from "typeorm";
 import { Container } from 'typeorm-typedi-extensions';
-import { ItemsController } from './api/items.controller';
+import { ItemController } from './api/item-controller';
 import { UserController } from './api/user-controller';
-import { WishlistsController } from './api/wishlists.controller';
-import morganMiddleware from './config/morganMiddleware'
+import { WishlistController } from './api/wishlist-controller';
+import morganMiddleware from './middleware/morgan-middleware'
 import Logger from "./lib/logger";
 
 const main = async () => {
@@ -33,8 +33,8 @@ const main = async () => {
         });
 
 
-    const wishlistsController = Container.get(WishlistsController);
-    const itemsController = Container.get(ItemsController);
+    const wishlistsController = Container.get(WishlistController);
+    const itemsController = Container.get(ItemController);
     const usersController = Container.get(UserController);
 
     // Routes

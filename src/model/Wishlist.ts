@@ -11,7 +11,7 @@ import {
 import { Item } from './Item';
 import { User } from './User';
 
-@Entity({ name: 'wishlists' })
+@Entity({ name: 'wishlist' })
 export class Wishlist {
 
     @PrimaryGeneratedColumn()

@@ -3,7 +3,7 @@ import { Request, Response, Router } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
 import Logger from '../lib/logger';
-import { UserService } from '../service/user.service';
+import { UserService } from '../service/user-service';
 
 @Service()
 export class UserController {

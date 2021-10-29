@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { IUser } from '../model/i-user';
 import { User } from '../model/User';
-import { UserRepository } from '../repository/user.repository';
+import { UserRepository } from '../repository/user-repository';
 
 @Service()
 export class UserService {

@@ -3,11 +3,11 @@ import { Inject, Service } from 'typedi';
 import Logger from '../lib/logger';
 import authMiddleware from '../middleware/authentication';
 import { IWishlist } from '../model/i-wishlist';
-import { WishlistService } from '../service/wishlist.service';
+import { WishlistService } from '../service/wishlist-service';
 
 
 @Service()
-export class WishlistsController {
+export class WishlistController {
 
     public router: Router;
 
@@ -37,13 +37,12 @@ export class WishlistsController {
         res.send(await this.wishlistService.findByUsername(username));
     }
 
-    public async save(req: Request, res: Response): Promise<IWishlist | undefined> {
+    public async save(req: Request, res: Response) {
         const wishlist: IWishlist = req.body;
         try {
-            return await this.wishlistService.save(wishlist);
+            res.send(await this.wishlistService.save(wishlist));
         } catch (err) {
-            res.send(err);
-            return;
+            throw new Error(`Error while saving wishlist ${err}`);
         }
     }
 

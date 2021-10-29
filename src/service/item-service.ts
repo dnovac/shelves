@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { IItem } from '../model/i-item';
-import { ItemRepository } from '../repository/item.repository';
+import { ItemRepository } from '../repository/item-repository';
 import Logger from "../lib/logger";
 
 @Service()

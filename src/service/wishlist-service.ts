@@ -2,7 +2,8 @@ import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import Logger from '../lib/logger';
 import { IWishlist } from '../model/i-wishlist';
-import { WishlistRepository } from '../repository/wishlist.repository';
+import { WishlistRepository } from '../repository/wishlist-repository';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 @Service()
 export class WishlistService {
@@ -26,16 +27,17 @@ export class WishlistService {
   }
 
   public async findByUsername(username: string): Promise<IWishlist[] | null> {
-    return await this.wishlistRepository.createQueryBuilder('wishlists')
-      .leftJoin("wishlists.user", "user")
-      .where("user.username = :username", { username })
+    return this.wishlistRepository.createQueryBuilder('wishlist')
+      .leftJoin('wishlist.user', 'user')
+      .where('user.username = :username', { username })
+      .innerJoinAndSelect('wishlist.items', 'items')
       .getMany();
   }
 
 
-  async save(wishlistProperties: IWishlist): Promise<IWishlist> {
+  public async save(wishlistProperties: IWishlist): Promise<IWishlist> {
     try {
-      return await this.wishlistRepository.save(wishlistProperties);
+      return this.wishlistRepository.save(wishlistProperties);
     } catch (e) {
       // todo: rather than check the not-null attributes in controller/service
       // create custom exceptions and throw them from here
@@ -45,14 +47,14 @@ export class WishlistService {
     }
   }
 
-  async update(id: number, wishlistProperties: IWishlist) {
-    return await this.wishlistRepository.update(
+  public async update(id: number, wishlistProperties: IWishlist): Promise<UpdateResult> {
+    return this.wishlistRepository.update(
       id,
-      { ...wishlistProperties },
+      { ...wishlistProperties }
     );
   }
 
-  async delete(wishlistId: number) {
+  public async delete(wishlistId: number): Promise<DeleteResult> {
     return this.wishlistRepository.delete(wishlistId);
   }
 

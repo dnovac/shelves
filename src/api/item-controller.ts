@@ -2,10 +2,10 @@ import { Request, Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
 import authMiddleware from '../middleware/authentication';
 import { IItem } from '../model/i-item';
-import { ItemService } from '../service/item.service';
+import { ItemService } from '../service/item-service';
 
 @Service()
-export class ItemsController {
+export class ItemController {
     public router: Router;
 
     constructor(
