@@ -15,13 +15,13 @@ export class ItemService {
 
     async findAll(): Promise<IItem[]> {
         return await this.itemRepository.find({
-            relations: ['wishlist'],
+            relations: ['wishlist']
         });
     }
 
     async findById(itemId: number): Promise<IItem | null> {
         return await this.itemRepository.findOne(itemId, {
-            relations: ['wishlist'],
+            relations: ['wishlist']
         }) ?? null;
     }
 
@@ -41,7 +41,7 @@ export class ItemService {
             return await this.itemRepository.update(
               itemId,
               {
-                  ...item
+                  ...item,
               }
             );
         } catch (err) {

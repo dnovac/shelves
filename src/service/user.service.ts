@@ -22,13 +22,6 @@ export class UserService {
         return user;
     }
 
-    public async findWishlistsByUsername(username: string): Promise<IUser | null> {
-        return await this.userRepository.createQueryBuilder('users')
-          .innerJoinAndSelect('users.wishlists', 'wishlists')
-          .where('users.username = :username', { username })
-          .getOne() as User ?? null;
-    }
-
     public async findByUsername(username: string): Promise<IUser | null> {
         const user: IUser | undefined = await this.userRepository.findOne({ username });
         if(!user) {

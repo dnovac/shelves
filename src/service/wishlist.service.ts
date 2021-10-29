@@ -14,16 +14,24 @@ export class WishlistService {
   }
 
   async findAll(): Promise<IWishlist[]> {
-    return await this.wishlistRepository.find({
-      relations: ['items'],
+    return this.wishlistRepository.find({
+      relations: ['items']
     });
   }
 
   async findById(wishlistId: number): Promise<IWishlist | null> {
     return await this.wishlistRepository.findOne(wishlistId, {
-      relations: ['items'],
+      relations: ['items']
     }) ?? null;
   }
+
+  public async findByUsername(username: string): Promise<IWishlist[] | null> {
+    return await this.wishlistRepository.createQueryBuilder('wishlists')
+      .leftJoin("wishlists.user", "user")
+      .where("user.username = :username", { username })
+      .getMany();
+  }
+
 
   async save(wishlistProperties: IWishlist): Promise<IWishlist> {
     try {

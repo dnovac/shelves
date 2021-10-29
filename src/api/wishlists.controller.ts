@@ -32,6 +32,11 @@ export class WishlistsController {
         res.send(await this.wishlistService.findById(wishlistId));
     }
 
+    public async findByUsername(req: Request, res: Response) {
+        const username: string = req.params.username;
+        res.send(await this.wishlistService.findByUsername(username));
+    }
+
     public async save(req: Request, res: Response): Promise<IWishlist | undefined> {
         const wishlist: IWishlist = req.body;
         try {
@@ -64,6 +69,7 @@ export class WishlistsController {
     private initRoutes() {
         this.router.get('/', authMiddleware, (req, res) => this.findAll(req, res));
         this.router.get('/:id', authMiddleware, (req, res) => this.findById(req, res));
+        this.router.get('/user/:username', authMiddleware, (req, res) => this.findByUsername(req, res));
         this.router.post('/', authMiddleware, (req, res) => this.save(req, res));
         this.router.put('/:id', authMiddleware, (req, res) => this.update(req, res));
         this.router.delete('/:id', authMiddleware, (req, res) => this.delete(req, res));

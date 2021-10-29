@@ -34,7 +34,7 @@ export class User implements IUser {
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
 
-    @Column()
+    @Column({ select: false })
     password: string;
 
     constructor(userOptions?: IUser) {
