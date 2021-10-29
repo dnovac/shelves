@@ -20,13 +20,13 @@ export class WishlistService {
     });
   }
 
-  async findById(wishlistId: number): Promise<IWishlist | null> {
-    return await this.wishlistRepository.findOne(wishlistId, {
+  async findById(wishlistId: number): Promise<IWishlist | undefined> {
+    return this.wishlistRepository.findOne(wishlistId, {
       relations: ['items']
-    }) ?? null;
+    });
   }
 
-  public async findByUsername(username: string): Promise<IWishlist[] | null> {
+  public async findByUsername(username: string): Promise<IWishlist[] | undefined> {
     return this.wishlistRepository.createQueryBuilder('wishlist')
       .leftJoin('wishlist.user', 'user')
       .where('user.username = :username', { username })

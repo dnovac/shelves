@@ -10,10 +10,6 @@ export class UserService {
     @InjectRepository()
     private readonly userRepository: UserRepository
 
-    constructor() {
-        //no-empty
-    }
-
     public async findByEmail(email: string): Promise<IUser | null> {
         const user: IUser | undefined = await this.userRepository.findOne({ email });
         if(!user) {
@@ -32,7 +28,7 @@ export class UserService {
 
     public async save(userOptions: IUser): Promise<IUser> {
         const user: User = new User(userOptions);
-        return await this.userRepository.save(user);
+        return this.userRepository.save(user);
     }
 
     public async isAlreadyInDb(username: string): Promise<boolean> {
