@@ -1,58 +1,42 @@
-import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 import express from 'express';
 import 'reflect-metadata';
-import { createConnection, useContainer } from "typeorm";
+import { Connection, createConnection, useContainer } from "typeorm";
 import { Container } from 'typeorm-typedi-extensions';
-import { ItemController } from './api/item-controller';
-import { UserController } from './api/user-controller';
-import { WishlistController } from './api/wishlist-controller';
-import morganMiddleware from './middleware/morgan-middleware'
-import Logger from "./lib/logger";
+import logger from "./config/logger";
+import { Server } from './api/server';
+import { createServer, Server as HttpServer } from 'http';
+import { env } from './config/globals';
 
-const main = async () => {
-    const port = Number(process.env.SERVER_PORT || 8080);
-    await dotenv.config();
+config();
 
-    const app = express();
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
-    app.use(cookieParser());
-    app.use(morganMiddleware);
-
+// StartUp
+(async function main() {
+  try {
+    // DI
     await useContainer(Container);
 
-    await createConnection()
-        .then(async (conn) => {
-            Logger.info('✅ Database was initialized successfully!');
-            // ToDo: remove it after prod and use migration scripts;
-            await conn.synchronize();
-        })
-        .catch((err) => {
-            Logger.error(`Error while initializing database! Error: ${ err }`);
-        });
+    // DB connection
+    logger.info('Initializing ORM connection...');
+    const connection: Connection = await createConnection();
 
+    // Init express server
+    const app: express.Application = new Server().app;
+    const server: HttpServer = createServer(app);
 
-    const wishlistsController = Container.get(WishlistController);
-    const itemsController = Container.get(ItemController);
-    const usersController = Container.get(UserController);
+    // Start express server
+    server.listen(env.NODE_PORT)
 
-    // Routes
-    app.get('/', (req, res) => {
-        res.send('Hello World');
+    server.on('listening', () => {
+      logger.info(`✅ WishlistR node server is listening on port: ${env.NODE_PORT} in ${env.NODE_ENV} mode.`);
+    })
+
+    server.on('close', () => {
+      connection.close().then(() => logger.info('DB connection closed.'));
+      logger.info('Node server closed.');
     });
-    app.use('/api/wishlists/', wishlistsController.router);
-    app.use('/api/items/', itemsController.router);
-    app.use('/api/users/', usersController.router);
-
-    // App Init
-    app.listen(port, () => {
-        Logger.debug(`✅ WishlistR server started at http://localhost:${ port }`);
-    });
-}
-
-// Start App
-main().catch(err => {
+  } catch (err) {
     // eslint-disable-next-line no-console
-    console.log(`Something very bad happened ${err}`);
-});
+    console.log(`Something very bad happened! ${err}`)
+  }
+})();

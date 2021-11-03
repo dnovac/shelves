@@ -2,8 +2,8 @@ import * as bcrypt from 'bcryptjs';
 import { Request, Response, Router } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
-import Logger from '../lib/logger';
-import { UserService } from '../service/user-service';
+import logger from '../../config/logger';
+import { UserService } from '../../service/user-service';
 
 @Service()
 export class UserController {
@@ -62,7 +62,7 @@ export class UserController {
       // return new user
       res.status(201).json({ token: token });
     } catch (err) {
-      Logger.error(err);
+      logger.error(err);
       res.status(500).send('An error occurred');
     }
   }
@@ -93,7 +93,7 @@ export class UserController {
         res.status(400).send("Invalid Credentials");
       }
     } catch (err) {
-      Logger.error(err);
+      logger.error(err);
       res.status(500).send('An error occurred');
     }
   }

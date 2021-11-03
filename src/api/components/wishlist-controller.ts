@@ -1,9 +1,9 @@
 import { Request, Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
-import Logger from '../lib/logger';
-import authMiddleware from '../middleware/authentication';
-import { IWishlist } from '../model/i-wishlist';
-import { WishlistService } from '../service/wishlist-service';
+import logger from '../../config/logger';
+import authMiddleware from '../../middleware/authentication';
+import { IWishlist } from '../../model/i-wishlist';
+import { WishlistService } from '../../service/wishlist-service';
 
 
 @Service()
@@ -26,7 +26,7 @@ export class WishlistController {
   public async findById(req: Request, res: Response): Promise<void> {
     const wishlistId: number = parseInt(req.params.id);
     if (!wishlistId) {
-      Logger.error('missing id when trying to listById');
+      logger.error('missing id when trying to listById');
       throw new Error('Id must be provided in order to fetch an wishlist by id.');
     }
     res.send(await this.wishlistService.findById(wishlistId));

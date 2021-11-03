@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { IItem } from '../model/i-item';
 import { ItemRepository } from '../repository/item-repository';
-import Logger from "../lib/logger";
+import logger from "../config/logger";
 import { DeleteResult, UpdateResult } from 'typeorm';
 
 @Service()
@@ -30,7 +30,7 @@ export class ItemService {
     try {
       return this.itemRepository.save(itemOptions);
     } catch (err) {
-      Logger.error(`Error while saving item: ${err}`)
+      logger.error(`Error while saving item: ${err}`)
       throw new Error(`Error while saving item: ${err}`)
       // todo: catch it in controller | throw new Error(`Error while saving item: ${err}`);
     }
@@ -45,7 +45,7 @@ export class ItemService {
         }
       );
     } catch (err) {
-      Logger.error(`Error while updating item: ${err}`)
+      logger.error(`Error while updating item: ${err}`)
       throw new Error(`Error while updating item: ${err}`)
       // todo: catch it in controller | throw new Error(`Error while updating item: ${err}`);
     }
