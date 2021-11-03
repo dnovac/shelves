@@ -1,62 +1,67 @@
-// // Set env to test
-// import express from 'express';
-//
-// import { config } from 'dotenv';
-// import { Connection, ConnectionOptions, createConnection } from 'typeorm';
-// import { createServer, Server as HttpServer } from 'http';
-// import supertest from 'supertest';
-//
-// // Set env variables from .env file
-// process.env.NODE_ENV = 'test';
-// config();
-//
-// /**
-//  * TestFactory
-//  * - Loaded in each unit test
-//  * - Starts server and DB connection
-//  */
-// export class TestFactory {
-//
-//   private app: express.Application;
-//   private connection: Connection;
-//   private server: HttpServer;
-//
-//   // DB connection options
-//   private options: ConnectionOptions = {
-//     type: 'postgres',
-//     database: new Uint8Array(),
-//     location: 'database',
-//     logging: false,
-//     synchronize: true,
-//     entities: ['dist/model/*.js']
-//   };
-//
-//   public get app(): supertest.SuperTest<supertest.Test> {
-//     return supertest(this.app);
-//   }
-//
-//   public get connection(): Connection {
-//     return this.connection;
-//   }
-//
-//   public get server(): HttpServer {
-//     return this.server;
-//   }
-//
-//   /**
-//    * Connect to DB and start server
-//    */
-//   public async init(): Promise<void> {
-//     this.connection = await createConnection(this.options);
-//     this.app = new Server().;
-//     this.server = createServer(this.app).listen(process.env.NODE_PORT);
-//   }
-//
-//   /**
-//    * Close server and DB connection
-//    */
-//   public async close(): Promise<void> {
-//     this._server.close();
-//     this._connection.close();
-//   }
-// }
+import 'reflect-metadata';
+
+// Set env to test
+process.env.NODE_ENV = 'test';
+
+// Set env vars from .env file
+import { config } from 'dotenv';
+config();
+
+import express from 'express';
+import supertest from 'supertest';
+
+import { Connection, ConnectionOptions, createConnection } from 'typeorm';
+import { createServer, Server as HttpServer } from 'http';
+import { Server } from '../src/api/server';
+import { env } from '../src/config/globals';
+
+/**
+ * TestFactory
+ * - Loaded in each unit test
+ * - Starts server and DB connection
+ */
+export class TestFactory {
+
+  private _app: express.Application;
+  private _connection: Connection;
+  private _server: HttpServer;
+
+  // DB connection options
+  private options: ConnectionOptions = {
+    type: 'postgres',
+    database: 'test-db',
+    logging: false,
+    synchronize: true,
+    entities: ['dist/model/*.js']
+  };
+
+  public get app(): supertest.SuperTest<supertest.Test> {
+    return supertest(this._app);
+  }
+
+  public get connection(): Connection {
+    return this._connection;
+  }
+
+  public get server(): HttpServer {
+    return this._server;
+  }
+
+  /**
+   * Connect to DB and start server
+   */
+  public async init(): Promise<void> {
+    this._connection = await createConnection(this.options);
+    this._app = new Server().app;
+    this._server = createServer(this._app).listen(env.NODE_PORT);
+  }
+
+  /**
+   * Close server and DB connection
+   */
+  public async close(): Promise<void> {
+    await this._server.close();
+    await this._connection.close();
+  }
+
+}
