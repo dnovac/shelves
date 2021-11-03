@@ -16,12 +16,11 @@ describe('Item component', () => {
   });
 
   describe('GET /items', () => {
-    it('responds with status 401 not authorized', (done) => {
+    it('responds with status 403 Forbidden', (done) => {
       factory.app.get('/api/items')
         .send()
         .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(401, done);
+        .expect(403, done);
     });
 
     it('add', async () => {

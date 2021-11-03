@@ -5,15 +5,17 @@ process.env.NODE_ENV = 'test';
 
 // Set env vars from .env file
 import { config } from 'dotenv';
+
 config();
 
 import express from 'express';
 import supertest from 'supertest';
 
-import { Connection, ConnectionOptions, createConnection } from 'typeorm';
+import { Connection, ConnectionOptions, createConnection, getConnectionOptions, useContainer } from 'typeorm';
 import { createServer, Server as HttpServer } from 'http';
 import { Server } from '../src/api/server';
 import { env } from '../src/config/globals';
+import { Container } from 'typeorm-typedi-extensions';
 
 /**
  * TestFactory
@@ -25,15 +27,6 @@ export class TestFactory {
   private _app: express.Application;
   private _connection: Connection;
   private _server: HttpServer;
-
-  // DB connection options
-  private options: ConnectionOptions = {
-    type: 'postgres',
-    database: 'test-db',
-    logging: false,
-    synchronize: true,
-    entities: ['dist/model/*.js']
-  };
 
   public get app(): supertest.SuperTest<supertest.Test> {
     return supertest(this._app);
@@ -51,7 +44,17 @@ export class TestFactory {
    * Connect to DB and start server
    */
   public async init(): Promise<void> {
-    this._connection = await createConnection(this.options);
+    // DI
+    await useContainer(Container);
+    // DB connection options
+    const connOpts = await getConnectionOptions();
+    this._connection = await createConnection({
+      ...connOpts,
+      database: 'wishlistr', // Todo: Should use another db just for tests?
+      synchronize: false,
+      logging: false,
+    } as ConnectionOptions);
+    // App
     this._app = new Server().app;
     this._server = createServer(this._app).listen(env.NODE_PORT);
   }
