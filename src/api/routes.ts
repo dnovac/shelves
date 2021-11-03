@@ -15,10 +15,10 @@ import { registerMiddleware } from '../middleware';
 export function initRESTRoutes(router: Router): void {
   const prefix = '/api'; // for versioning /api/v1
 
-  router.get(prefix, (req: Request, res: Response) => res.send('PING'));
-
   registerMiddleware(router);
   registerAPIRoutes(router, prefix);
+
+  router.get(prefix, (req: Request, res: Response) => res.send('PING'));
 }
 
 /**

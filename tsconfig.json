@@ -133,5 +133,11 @@
     {
       "allowTemplateLiterals": true
     }
+  ],
+  "include": [
+    "src/**/*.ts",
+    "bin/**/*.ts",
+    "test/**/*.ts",
+    "app.ts"
   ]
 }
