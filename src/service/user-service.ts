@@ -26,7 +26,7 @@ export class UserService {
     return user;
   }
 
-  public async save(userOptions: IUser): Promise<IUser> {
+  public async save(userOptions: Omit<IUser, 'id'>): Promise<IUser> {
     const user: User = new User(userOptions);
     return this.userRepository.save(user);
   }

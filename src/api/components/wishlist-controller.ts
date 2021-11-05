@@ -10,12 +10,14 @@ import { WishlistService } from '../../service/wishlist-service';
 export class WishlistController {
 
   public router: Router;
+  //private authService: AuthenticationService;
 
   constructor(
     @Inject()
     private readonly wishlistService: WishlistService
   ) {
     this.router = Router();
+    //this.authService = new AuthenticationService();
     this.initRoutes();
   }
 

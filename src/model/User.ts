@@ -37,7 +37,7 @@ export class User {
     @Column({ select: false })
     password: string;
 
-    constructor(userOptions?: IUser) {
+    constructor(userOptions?: Omit<IUser, 'id'>) {
         if (userOptions) {
             this.username = userOptions.username;
             this.firstName = userOptions.firstName;
