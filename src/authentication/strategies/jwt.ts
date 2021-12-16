@@ -8,7 +8,7 @@ export class JwtStrategy extends BaseStrategy {
   private readonly strategyOpts: StrategyOptions;
 
 
-  constructor(strategyOpts: StrategyOptions) {
+  public constructor(strategyOpts: StrategyOptions) {
     super();
     this.strategyOpts = strategyOpts;
     this._strategy = new Strategy(this.strategyOpts, this.verify)

@@ -1,7 +1,7 @@
 import { JwtStrategy } from './strategies/jwt';
 import { ExtractJwt, StrategyOptions } from 'passport-jwt';
 import { sign, SignOptions } from 'jsonwebtoken';
-import { use } from 'passport';
+import passport  from 'passport';
 import { Handler, NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 
@@ -26,7 +26,7 @@ export class AuthenticationService {
   }
 
 
-  constructor(defaultStrategy: PassportStrategy = 'jwt') {
+  public constructor(defaultStrategy: PassportStrategy = 'jwt') {
     this.defaultStrategy = defaultStrategy;
     this.jwtStrategy = new JwtStrategy(this.strategyOpts);
   }
@@ -46,7 +46,7 @@ export class AuthenticationService {
    *
    */
   public initStrategies(): void {
-    use('jwt', this.jwtStrategy.strategy);
+    passport.use('jwt',this.jwtStrategy.strategy);
   }
 
   /**

@@ -37,6 +37,6 @@ config();
     });
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.log(`Something very bad happened! ${err}`)
+    console.log(`Something very bad happened!\n ${err}`)
   }
 })();
