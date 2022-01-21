@@ -20,6 +20,7 @@ export function initRESTRoutes(router: Router): void {
   registerMiddleware(router);
   registerAPIRoutes(router, prefix);
 
+
 }
 
 /**

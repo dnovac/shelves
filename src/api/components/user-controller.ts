@@ -1,26 +1,25 @@
 import * as bcrypt from 'bcryptjs';
-import { NextFunction, Request, Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
 import logger from '../../config/logger';
 import { UserService } from '../../service/user-service';
 import { AuthenticationService } from '../../authentication/authentication-service';
-import { body } from 'express-validator';
 
 @Service()
 export class UserController {
-  public router: Router;
-  private readonly authService: AuthenticationService = new AuthenticationService(); // todo can be DI'd
+  public readonly router: Router = Router();
+  private readonly authService: AuthenticationService; // todo can be DI'd
 
   constructor(
     @Inject()
     private readonly userService: UserService
   ) {
-    this.router = Router();
+    this.authService = new AuthenticationService()
     this.initRoutes();
   }
 
-  public async register(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  public async register(req: Request, res: Response): Promise<Response | void> {
     try {
       // Get user input
       const { username, firstName, lastName, age, email, password } = req.body;
@@ -35,7 +34,7 @@ export class UserController {
       // todo: username should also be unique
       const alreadyExists = await this.userService.isAlreadyInDb(username);
       if (alreadyExists) {
-        res.status(400).send("User Already Exist. Please Login");
+        return res.status(400).send("User Already Exist. Please Login");
       }
 
       // Encrypt user password
@@ -63,15 +62,14 @@ export class UserController {
       //user.token = token;
 
       // return new user
-      res.status(200).json({ token: token });
+      return res.status(200).json({ token: token });
     } catch (err) {
       logger.error(err);
-      res.status(500).send('An error occurred');
-      return next(err);
+      return res.status(500).send(`An error occurred while registering: ${(err as Error).message}`);
     }
   }
 
-  public async login(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  public async login(req: Request, res: Response): Promise<Response | void> {
     try {
       // Get user input
       const { email, password, username } = req.body; // ToDo: username or email - one of em unique, the other deleted;
@@ -101,7 +99,6 @@ export class UserController {
     } catch (err) {
       logger.error(err);
       res.status(500).send('An error occurred');
-      return next(err);
     }
   }
 
@@ -110,22 +107,11 @@ export class UserController {
    * Initializes the routes for the controller UsersController
    * @private
    */
-  private initRoutes() {
-    this.router.post(
-      '/register',  // ToDo: this can also be /register/:uuid generated from FE.
-      body('email').isEmail(),
-      body('password').isString(),
-      body('username').isString(),
-      this.authService.validateRequest,
-      this.register
-    );
+  private initRoutes(): void {
+    this.router.post('/register',
+      (req, res) => this.register(req, res));
     this.router.post(
       '/login',
-      body('email').isEmail(),
-      body('password').isString(),
-      body('username').isString(),
-      this.authService.validateRequest,
-      this.login
-    );
+      (req, res) => this.login(req, res));
   }
 }
