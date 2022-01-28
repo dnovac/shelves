@@ -1,8 +1,8 @@
-import { expect } from 'chai';
 import 'mocha';
-import { TestFactory } from './factory';
+import { expect } from 'chai';
+import { TestFactory } from '../factory';
 
-describe('Item component', () => {
+describe('Items controller', () => {
 
   const factory: TestFactory = new TestFactory();
   // todo mock data
@@ -16,11 +16,13 @@ describe('Item component', () => {
   });
 
   describe('GET /items', () => {
-    it('responds with status 403 Forbidden', (done) => {
+    it('should find all items and respond with status 200 OK', () => {
       factory.app.get('/api/items')
         .send()
         .set('Accept', 'application/json')
-        .expect(403, done);
+        .expect('Content-Type', /json/)
+        // Because the auth is not needed when node_env = test
+        .expect(200);
     });
 
     it('add', async () => {

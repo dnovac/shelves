@@ -3,6 +3,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { IUser } from '../model/i-user';
 import { User } from '../model/User';
 import { UserRepository } from '../repository/user-repository';
+import { DeleteResult } from 'typeorm';
 
 @Service()
 export class UserService {
@@ -41,6 +42,10 @@ export class UserService {
 
   public async isAlreadyInDb(username: string): Promise<boolean> {
     return !!(await this.userRepository.findOne({ username }));
+  }
+
+  public async delete(userId: string): Promise<DeleteResult> {
+    return this.userRepository.delete(userId);
   }
 
 }
