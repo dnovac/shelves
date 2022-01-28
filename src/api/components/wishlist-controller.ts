@@ -4,20 +4,22 @@ import logger from '../../config/logger';
 import authMiddleware from '../../middleware/authentication';
 import { IWishlist } from '../../model/i-wishlist';
 import { WishlistService } from '../../service/wishlist-service';
+import { AuthenticationService } from '../../authentication/authentication-service';
 
 
 @Service()
 export class WishlistController {
 
   public router: Router;
-  //private authService: AuthenticationService;
 
   constructor(
     @Inject()
-    private readonly wishlistService: WishlistService
+    private readonly wishlistService: WishlistService,
+    @Inject()
+    private authService: AuthenticationService
   ) {
     this.router = Router();
-    //this.authService = new AuthenticationService();
+    // this.authService = new AuthenticationService();
     this.initRoutes();
   }
 
@@ -68,7 +70,10 @@ export class WishlistController {
 
 
   private initRoutes() {
-    this.router.get('/', authMiddleware, (req, res) => this.findAll(req, res));
+    this.router.get('/',
+      this.authService.isAuthorized(),
+      (req, res) => this.findAll(req, res)
+    );
     this.router.get('/:id', authMiddleware, (req, res) => this.findById(req, res));
     this.router.get('/user/:username', authMiddleware, (req, res) => this.findByUsername(req, res));
     this.router.post('/', authMiddleware, (req, res) => this.save(req, res));

@@ -9,13 +9,13 @@ import { AuthenticationService } from '../../authentication/authentication-servi
 @Service()
 export class UserController {
   public readonly router: Router = Router();
-  private readonly authService: AuthenticationService; // todo can be DI'd
 
   constructor(
     @Inject()
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    @Inject()
+    private readonly authService: AuthenticationService,
   ) {
-    this.authService = new AuthenticationService()
     this.initRoutes();
   }
 

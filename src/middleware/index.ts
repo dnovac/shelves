@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import morganMiddleware from './morgan-middleware';
 import helmet from 'helmet';
 import { AuthenticationService } from '../authentication/authentication-service';
+import { Container } from 'typedi';
 
 /**
  * Init Express App middlewares
@@ -29,5 +30,5 @@ export function registerMiddleware(router: Router): void {
   // router.use(authMiddleware);
 
   // Setup passport strategies
-  new AuthenticationService().initStrategies();
+  Container.get(AuthenticationService).initStrategies();
 }

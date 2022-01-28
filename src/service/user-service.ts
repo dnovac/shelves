@@ -10,6 +10,14 @@ export class UserService {
   @InjectRepository()
   private readonly userRepository: UserRepository
 
+  public async findById(id: string): Promise<IUser | undefined> {
+    return await this.userRepository.findOne({
+      where: {
+        id
+      }
+    });
+  }
+
   public async findByEmail(email: string): Promise<IUser | null> {
     const user: IUser | undefined = await this.userRepository.findOne({ email });
     if (!user) {

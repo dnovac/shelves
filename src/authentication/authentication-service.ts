@@ -1,15 +1,18 @@
 import { JwtStrategy } from './strategies/jwt';
 import { ExtractJwt, StrategyOptions } from 'passport-jwt';
 import { sign, SignOptions } from 'jsonwebtoken';
-import passport  from 'passport';
+import passport from 'passport';
 import { Handler, NextFunction, Request, Response } from 'express';
+import { Container, Service } from 'typedi';
+import { UserService } from '../service/user-service';
 
 export type PassportStrategy = 'jwt';
 
-
+@Service()
 export class AuthenticationService {
-  private defaultStrategy: PassportStrategy;
+  private readonly defaultStrategy: PassportStrategy;
   private jwtStrategy: JwtStrategy;
+
 
   private readonly strategyOpts: StrategyOptions = {
     audience: 'wishlistr-api-client',
@@ -18,6 +21,7 @@ export class AuthenticationService {
     secretOrKey: process.env.TOKEN_KEY,
   }
 
+  // JWT opts
   private readonly signOpts: SignOptions = {
     audience: this.strategyOpts.audience,
     expiresIn: process.env.TOKEN_EXPIRATION_TIME,
@@ -25,9 +29,9 @@ export class AuthenticationService {
   }
 
 
-  public constructor(defaultStrategy: PassportStrategy = 'jwt') {
+  public constructor(userService: UserService, defaultStrategy: PassportStrategy = 'jwt') {
     this.defaultStrategy = defaultStrategy;
-    this.jwtStrategy = new JwtStrategy(this.strategyOpts);
+    this.jwtStrategy = new JwtStrategy(this.strategyOpts, Container.get(UserService));
   }
 
   /**
@@ -45,7 +49,7 @@ export class AuthenticationService {
    *
    */
   public initStrategies(): void {
-    passport.use('jwt',this.jwtStrategy.strategy);
+    passport.use('jwt', this.jwtStrategy.strategy);
   }
 
   /**

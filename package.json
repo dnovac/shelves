@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@types/cors": "^2.8.12",
+    "@types/joi": "^17.2.3",
     "@types/morgan": "^1.9.3",
     "@types/passport": "^1.0.7",
     "@types/passport-http": "^0.3.9",
@@ -54,6 +55,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "helmet": "^4.6.0",
+    "joi": "^17.5.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "passport": "^0.5.1",
