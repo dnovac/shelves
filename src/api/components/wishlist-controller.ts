@@ -1,7 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
 import logger from '../../config/logger';
-import authMiddleware from '../../middleware/authentication';
 import { IWishlist } from '../../model/i-wishlist';
 import { WishlistService } from '../../service/wishlist-service';
 import { AuthenticationService } from '../../authentication/authentication-service';
@@ -46,7 +45,8 @@ export class WishlistController {
     try {
       res.send(await this.wishlistService.save(wishlist));
     } catch (err) {
-      throw new Error(`Error while saving wishlist ${err}`);
+      logger.error(`Error while trying to save wishlist. Error: ${err}`);
+      res.status(500).send('Error while trying to save wishlist.');
     }
   }
 
@@ -65,7 +65,7 @@ export class WishlistController {
     if (!wishlistId) {
       throw new Error('An id must be provided in order to update an wishlist');
     }
-    res.send(this.wishlistService.delete(wishlistId));
+    res.send(await this.wishlistService.delete(wishlistId));
   }
 
 
@@ -74,10 +74,25 @@ export class WishlistController {
       this.authService.isAuthorized(),
       (req, res) => this.findAll(req, res)
     );
-    this.router.get('/:id', authMiddleware, (req, res) => this.findById(req, res));
-    this.router.get('/user/:username', authMiddleware, (req, res) => this.findByUsername(req, res));
-    this.router.post('/', authMiddleware, (req, res) => this.save(req, res));
-    this.router.put('/:id', authMiddleware, (req, res) => this.update(req, res));
-    this.router.delete('/:id', authMiddleware, (req, res) => this.delete(req, res));
+    this.router.get('/:id',
+      this.authService.isAuthorized(),
+      (req, res) => this.findById(req, res)
+    );
+    this.router.get('/user/:username',
+      this.authService.isAuthorized(),
+      (req, res) => this.findByUsername(req, res)
+    );
+    this.router.post('/',
+      this.authService.isAuthorized(),
+      (req, res) => this.save(req, res)
+    );
+    this.router.put('/:id',
+      this.authService.isAuthorized(),
+      (req, res) => this.update(req, res)
+    );
+    this.router.delete('/:id',
+      this.authService.isAuthorized(),
+      (req, res) => this.delete(req, res)
+    );
   }
 }
