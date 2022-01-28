@@ -1,11 +1,11 @@
 import express from 'express';
-import { initRESTRoutes } from './routes';
+import { initApi } from './routes';
 
 export class Server {
   private readonly _app: express.Application = express();
 
   public constructor() {
-    initRESTRoutes(this.app);
+    initApi(this.app);
   }
 
   public get app(): express.Application {

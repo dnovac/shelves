@@ -18,7 +18,6 @@ export class WishlistController {
     private authService: AuthenticationService
   ) {
     this.router = Router();
-    // this.authService = new AuthenticationService();
     this.initRoutes();
   }
 

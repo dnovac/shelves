@@ -11,7 +11,7 @@ import { Container } from 'typedi';
  * Init Express App middlewares
  * @param {Router} router
  */
-export function registerMiddleware(router: Router): void {
+export function initMiddlewares(router: Router): void {
   // Put the Helmet on
   router.use(helmet());
 
@@ -25,9 +25,6 @@ export function registerMiddleware(router: Router): void {
   router.use(urlencoded({ extended: true }));
   router.use(cookieParser());
   router.use(morganMiddleware);
-
-  // ToDo: get rid of this
-  // router.use(authMiddleware);
 
   // Setup passport strategies
   Container.get(AuthenticationService).initStrategies();

@@ -17,7 +17,7 @@ export class Item {
   imageUrl: string;
 
   @ManyToOne(() => Wishlist, wishlist => wishlist.items,
-    { nullable: true, cascade: true, onDelete: 'CASCADE' })
+    { nullable: false, cascade: true, onDelete: 'CASCADE' })
   wishlist: Wishlist;
 
   @CreateDateColumn({ name: 'created_at' })

@@ -1,8 +1,9 @@
+import logger from '../../config/logger';
 import { Request, Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
-import authMiddleware from '../../middleware/authentication';
 import { IItem } from '../../model/i-item';
 import { ItemService } from '../../service/item-service';
+import { AuthenticationService } from '../../authentication/authentication-service';
 
 @Service()
 export class ItemController {
@@ -10,7 +11,9 @@ export class ItemController {
 
   constructor(
     @Inject()
-    private readonly itemService: ItemService
+    private readonly itemService: ItemService,
+    @Inject()
+    private authService: AuthenticationService,
   ) {
     this.router = Router();
     this.initRoutes();
@@ -22,16 +25,23 @@ export class ItemController {
 
   public async findById(req: Request, res: Response): Promise<void> {
     const itemId: number = parseInt(req.params.id);
-
-    res.send(await this.itemService.findById(itemId));
+    const item: IItem | undefined = await this.itemService.findById(itemId);
+    if (item) {
+      res.status(200).send(item);
+    }
+    res.status(404).send(item);
   }
 
   public async save(req: Request, res: Response): Promise<void> {
     const itemOptions: IItem = req.body;
-    const item = await this.itemService.save(
-      itemOptions
-    );
-    res.send(item);
+    try {
+      res.send(await this.itemService.save(
+        itemOptions
+      ));
+    } catch (e) {
+      logger.error(`An error occured while trying to save an item. Error: ${e}`);
+      res.status(500).send((e as Error).message);
+    }
   }
 
   public async update(req: Request, res: Response): Promise<void> {
@@ -48,16 +58,35 @@ export class ItemController {
     if (!itemId) {
       throw new Error('An id must be provided for an item deletion.');
     }
-    res.send(this.itemService.delete(itemId));
+    try {
+      res.send(await this.itemService.delete(itemId));
+    } catch (e) {
+      logger.error(`An error occurred while deleting an item. ${e}`);
+      res.status(500).send((e as Error).message);
+    }
   }
 
 
   private initRoutes() {
-    this.router.get('/', authMiddleware, (req, res) => this.findAll(req, res));
-    this.router.get('/:id', authMiddleware, (req, res) => this.findById(req, res));
-    this.router.post('/', authMiddleware, (req, res) => this.save(req, res));
-    this.router.put('/:id', authMiddleware, (req, res) => this.update(req, res));
-    this.router.delete('/:id', authMiddleware, (req, res) => this.delete(req, res));
-
+    this.router.get('/',
+      this.authService.isAuthorized(),
+      (req, res) => this.findAll(req, res)
+    );
+    this.router.get('/:id',
+      this.authService.isAuthorized(),
+      (req, res) => this.findById(req, res)
+    );
+    this.router.post('/',
+      this.authService.isAuthorized(),
+      (req, res) => this.save(req, res)
+    );
+    this.router.put('/:id',
+      this.authService.isAuthorized(),
+      (req, res) => this.update(req, res)
+    );
+    this.router.delete('/:id',
+      this.authService.isAuthorized(),
+      (req, res) => this.delete(req, res)
+    );
   }
 }
