@@ -1,14 +1,26 @@
 import 'mocha';
-import { expect } from 'chai';
 import { TestFactory } from '../factory';
+import { ItemService } from '../../src/service/item-service';
+import { Container } from 'typedi';
+import { expect } from 'chai';
+import { WishlistService } from '../../src/service/wishlist-service';
+import { User } from '../../src/model/User';
+import { UserService } from '../../src/service/user-service';
+import { IUser } from '../../src/model/i-user';
+
 
 describe('Items controller', () => {
 
+  // TODO will need a setup and teardown for whole db
   const factory: TestFactory = new TestFactory();
-  // todo mock data
+  let itemService: ItemService;
+  let wishlistService: WishlistService;
+
 
   before(async () => {
     await factory.init();
+    itemService = Container.get(ItemService);
+    wishlistService = Container.get(WishlistService);
   });
 
   after(async () => {
@@ -16,21 +28,66 @@ describe('Items controller', () => {
   });
 
   describe('GET /items', () => {
-    it('should find all items and respond with status 200 OK', () => {
+    it('should find all items and respond with status 200 OK', (done) => {
       factory.app.get('/api/items')
         .send()
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         // Because the auth is not needed when node_env = test
-        .expect(200);
+        .expect(200, done);
     });
 
-    it('add', async () => {
-      //const promise: IItem[] = await itemService.findAll();
-      // eslint-disable-next-line no-console
-      // console.log(promise)
-      const result = 3 + 4;
-      expect(result).to.eq(7);
+    it('should find all items and related wishlists', (done) => {
+      factory.app.get('/api/items')
+        .send()
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200, (err, res) => {
+          // const items: IItem[] = res.body;
+          // TODO: need to init another db and on before create items and on after delete them and only expect the ones created.
+          // expect(items).to.exist;
+          // expect(items).to.not.be.empty;
+          // expect(items.length).to.eq(1);
+          done();
+        });
+    });
+  });
+
+  describe('GET /items/:id', () => {
+    it('should find item by id and respond with status 200 OK', async () => {
+      // Create User
+      // TODO: move it at the .spec file level
+      const testUser: IUser = await Container.get(UserService)
+        .save(
+          {
+            username: 'test_username',
+            age: 200,
+            email: 'test@email.com',
+            firstName: 'TestFirstName',
+            lastName: 'TestLastName',
+            password: 'Test123',
+          });
+
+      const wishlist = await wishlistService.save({
+        title: "test-items-wishlist",
+        user: testUser
+      })
+      const item = await itemService.save({
+        title: 'TestItem',
+        url: 'test-url-item',
+        imageUrl: 'test-image-url-item',
+        wishlist,
+      });
+      const itemId = item.id;
+
+      factory.app.get(`/api/items/${itemId}`)
+        .send()
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        // Because the auth is not needed when node_env = test
+        .expect(200, (err, res) => {
+          expect(res.body).to.not.be.null;
+        });
     });
 
   });

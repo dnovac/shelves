@@ -20,8 +20,8 @@ export class Wishlist {
   @Column({ length: 255, name: 'title' })
   title: string;
 
-  @OneToMany(() => Item, item => item.wishlist)
-  items: Item[];
+  @OneToMany(() => Item, item => item.wishlist, { nullable: true})
+  items?: Item[];
 
   @ManyToOne(() => User, user => user.wishlists, { nullable: false })
   @Exclude()
