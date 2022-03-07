@@ -1,7 +1,7 @@
 import { IsEmail } from 'class-validator';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { IUser } from './i-user';
-import { Wishlist } from './Wishlist';
+import { Collection } from './Collection';
 
 @Entity({ name: 'user' })
 export class User {
@@ -25,8 +25,8 @@ export class User {
     @IsEmail()
     email: string;
 
-    @OneToMany(() => Wishlist, wishlist => wishlist.user, { nullable: true })
-    wishlists?: Wishlist[];
+    @OneToMany(() => Collection, collection => collection.user, { nullable: true })
+    collections?: Collection[];
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;

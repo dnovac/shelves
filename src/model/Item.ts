@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { Wishlist } from './Wishlist';
+import { Collection } from './Collection';
 
 @Entity({ name: 'item' })
 export class Item {
@@ -16,9 +16,9 @@ export class Item {
   @Column({ type: 'text', name: 'image_url', nullable: true })
   imageUrl: string;
 
-  @ManyToOne(() => Wishlist, wishlist => wishlist.items,
+  @ManyToOne(() => Collection, collection => collection.items,
     { nullable: false, cascade: true, onDelete: 'CASCADE' })
-  wishlist: Wishlist;
+  collection: Collection;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -26,11 +26,11 @@ export class Item {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  constructor(title: string, url: string, imageUrl: string, wishlist: Wishlist) {
+  constructor(title: string, url: string, imageUrl: string, collection: Collection) {
     this.title = title;
     this.url = url;
     this.imageUrl = imageUrl;
-    this.wishlist = wishlist;
+    this.collection = collection;
     this.createdAt = new Date();
     this.updatedAt = new Date();
   }

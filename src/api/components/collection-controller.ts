@@ -1,19 +1,19 @@
 import { Request, Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
 import logger from '../../config/logger';
-import { IWishlist } from '../../model/i-wishlist';
-import { WishlistService } from '../../service/wishlist-service';
+import { ICollection } from '../../model/i-collection';
+import { CollectionService } from '../../service/collection-service';
 import { AuthenticationService } from '../../authentication/authentication-service';
 
 
 @Service()
-export class WishlistController {
+export class CollectionController {
 
   public router: Router;
 
   constructor(
     @Inject()
-    private readonly wishlistService: WishlistService,
+    private readonly collectionService: CollectionService,
     @Inject()
     private authService: AuthenticationService
   ) {
@@ -22,49 +22,49 @@ export class WishlistController {
   }
 
   public async findAll(req: Request, res: Response): Promise<void> {
-    res.send(await this.wishlistService.findAll());
+    res.send(await this.collectionService.findAll());
   }
 
   public async findById(req: Request, res: Response): Promise<void> {
-    const wishlistId: number = parseInt(req.params.id);
-    if (!wishlistId) {
+    const collectionId: number = parseInt(req.params.id);
+    if (!collectionId) {
       logger.error('missing id when trying to listById');
-      throw new Error('Id must be provided in order to fetch an wishlist by id.');
+      throw new Error('Id must be provided in order to fetch an collection by id.');
     }
-    res.send(await this.wishlistService.findById(wishlistId));
+    res.send(await this.collectionService.findById(collectionId));
   }
 
   public async findByUsername(req: Request, res: Response): Promise<void> {
     const username: string = req.params.username;
-    res.send(await this.wishlistService.findByUsername(username));
+    res.send(await this.collectionService.findByUsername(username));
   }
 
   public async save(req: Request, res: Response): Promise<void> {
-    const wishlist: IWishlist = req.body;
+    const collection: ICollection = req.body;
     try {
-      res.send(await this.wishlistService.save(wishlist));
+      res.send(await this.collectionService.save(collection));
     } catch (err) {
-      logger.error(`Error while trying to save wishlist. Error: ${err}`);
-      res.status(500).send('Error while trying to save wishlist.');
+      logger.error(`Error while trying to save collection. Error: ${err}`);
+      res.status(500).send('Error while trying to save collection.');
     }
   }
 
   public async update(req: Request, res: Response): Promise<void> {
-    const wishlistId: number = parseInt(req.params.id);
-    if (!wishlistId) {
-      throw new Error('An id must be provided in order to update an wishlist');
+    const collectionId: number = parseInt(req.params.id);
+    if (!collectionId) {
+      throw new Error('An id must be provided in order to update a collection.');
     }
-    const wishlist: IWishlist = req.body;
+    const collection: ICollection = req.body;
 
-    res.send(await this.wishlistService.update(wishlistId, wishlist));
+    res.send(await this.collectionService.update(collectionId, collection));
   }
 
   public async delete(req: Request, res: Response): Promise<void> {
-    const wishlistId: number = parseInt(req.params.id);
-    if (!wishlistId) {
-      throw new Error('An id must be provided in order to update an wishlist');
+    const collectionId: number = parseInt(req.params.id);
+    if (!collectionId) {
+      throw new Error('An id must be provided in order to update a collection.');
     }
-    res.send(await this.wishlistService.delete(wishlistId));
+    res.send(await this.collectionService.delete(collectionId));
   }
 
 
