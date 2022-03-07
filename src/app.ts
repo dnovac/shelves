@@ -28,7 +28,7 @@ config();
     server.listen(env.NODE_PORT)
 
     server.on('listening', () => {
-      logger.info(`✅ WishlistR server is listening on port: ${env.NODE_PORT} in ${env.NODE_ENV} mode.`);
+      logger.info(`✅ Shelves server is listening on port: ${env.NODE_PORT} in ${env.NODE_ENV} mode.`);
     })
 
     server.on('close', () => {

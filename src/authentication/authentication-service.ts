@@ -15,8 +15,8 @@ export class AuthenticationService {
 
 
   private readonly strategyOpts: StrategyOptions = {
-    audience: 'wishlistr-api-client',
-    issuer: 'wishlistr-api',
+    audience: 'shelves-api-client',
+    issuer: 'shelves-api',
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.TOKEN_KEY,
   }

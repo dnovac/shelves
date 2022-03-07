@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { Container } from 'typeorm-typedi-extensions';
-import { WishlistController } from './components/wishlist-controller';
+import { CollectionController } from './components/collection-controller';
 import { ItemController } from './components/item-controller';
 import { UserController } from './components/user-controller';
 import { initMiddlewares } from '../middleware';
@@ -30,7 +30,7 @@ export function initApi(router: Router): void {
  */
 export function initAPIRoutes(router: Router, prefix = ''): void {
   // Register API routes
-  router.use(`${prefix}/wishlists/`, Container.get(WishlistController).router);
+  router.use(`${prefix}/collection/`, Container.get(CollectionController).router);
   router.use(`${prefix}/items/`, Container.get(ItemController).router);
   router.use(`${prefix}/users/`, Container.get(UserController).router);
 }

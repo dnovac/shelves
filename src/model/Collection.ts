@@ -11,8 +11,8 @@ import {
 import { Item } from './Item';
 import { User } from './User';
 
-@Entity({ name: 'wishlist' })
-export class Wishlist {
+@Entity({ name: 'collection' })
+export class Collection {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -20,10 +20,10 @@ export class Wishlist {
   @Column({ length: 255, name: 'title' })
   title: string;
 
-  @OneToMany(() => Item, item => item.wishlist, { nullable: true})
+  @OneToMany(() => Item, item => item.collection, { nullable: true})
   items?: Item[];
 
-  @ManyToOne(() => User, user => user.wishlists, { nullable: false })
+  @ManyToOne(() => User, user => user.collections, { nullable: false })
   @Exclude()
   user: User;
 

@@ -50,7 +50,7 @@ export class TestFactory {
     const connOpts = await getConnectionOptions();
     this._connection = await createConnection({
       ...connOpts,
-      database: 'wishlistr', // Todo: Should use another db just for tests?
+      database: 'shelves', // Todo: Should use another db just for tests?
       synchronize: false,
       logging: false,
     } as ConnectionOptions);

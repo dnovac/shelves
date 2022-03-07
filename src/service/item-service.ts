@@ -4,7 +4,7 @@ import { IItem } from '../model/i-item';
 import { ItemRepository } from '../repository/item-repository';
 import logger from "../config/logger";
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { WishlistRepository } from '../repository/wishlist-repository';
+import { CollectionRepository } from '../repository/collection-repository';
 
 @Service()
 export class ItemService {
@@ -13,41 +13,41 @@ export class ItemService {
     @InjectRepository()
     private readonly itemRepository: ItemRepository,
     @InjectRepository()
-    private readonly wishlistRepository: WishlistRepository
+    private readonly collectionRepository: CollectionRepository
   ) {
   }
 
   public async findAll(): Promise<IItem[]> {
     return this.itemRepository.find({
-      relations: ['wishlist']
+      relations: ['collection']
     });
   }
 
   public async findById(itemId: number): Promise<IItem | undefined> {
     return this.itemRepository.findOne(itemId, {
-      relations: ['wishlist']
+      relations: ['collection']
     });
   }
 
   public async save(itemOptions: IItem): Promise<IItem> {
-    const wishlistId = itemOptions.wishlist?.id;
-    let foundWishlist;
-    if (wishlistId) {
-      foundWishlist = await this.wishlistRepository.findOne({
-        id: wishlistId,
+    const collectionId = itemOptions.collection?.id;
+    let foundCollection;
+    if (collectionId) {
+      foundCollection = await this.collectionRepository.findOne({
+        id: collectionId,
       });
     }
 
-    // An item must have a wishlist
-    // Because each wishlist must be of an user and all items/wishlists are contexts of an user
-    if (!foundWishlist) {
-      throw new Error('Wishlist not found in the database! An item must have a wishlist as parent.')
+    // An item must have a collection as parent
+    // Because each collection must be child an user and all items/collections are contexts of an user
+    if (!foundCollection) {
+      throw new Error('Collection not found in the database! An item must have a collection as parent.')
     }
 
     try {
       return this.itemRepository.save({
         ...itemOptions,
-        wishlist: foundWishlist,
+        collection: foundCollection,
       });
     } catch (err) {
       logger.error(`Error while saving item: ${err}`)

@@ -3,8 +3,7 @@ import { TestFactory } from '../factory';
 import { ItemService } from '../../src/service/item-service';
 import { Container } from 'typedi';
 import { expect } from 'chai';
-import { WishlistService } from '../../src/service/wishlist-service';
-import { User } from '../../src/model/User';
+import { CollectionService } from '../../src/service/collection-service';
 import { UserService } from '../../src/service/user-service';
 import { IUser } from '../../src/model/i-user';
 
@@ -14,13 +13,13 @@ describe('Items controller', () => {
   // TODO will need a setup and teardown for whole db
   const factory: TestFactory = new TestFactory();
   let itemService: ItemService;
-  let wishlistService: WishlistService;
+  let collectionService: CollectionService;
 
 
   before(async () => {
     await factory.init();
     itemService = Container.get(ItemService);
-    wishlistService = Container.get(WishlistService);
+    collectionService = Container.get(CollectionService);
   });
 
   after(async () => {
@@ -37,7 +36,7 @@ describe('Items controller', () => {
         .expect(200, done);
     });
 
-    it('should find all items and related wishlists', (done) => {
+    it('should find all items and related collections', (done) => {
       factory.app.get('/api/items')
         .send()
         .set('Accept', 'application/json')
@@ -68,15 +67,15 @@ describe('Items controller', () => {
             password: 'Test123',
           });
 
-      const wishlist = await wishlistService.save({
-        title: "test-items-wishlist",
+      const collection = await collectionService.save({
+        title: "test-items-collection",
         user: testUser
       })
       const item = await itemService.save({
         title: 'TestItem',
         url: 'test-url-item',
         imageUrl: 'test-image-url-item',
-        wishlist,
+        collection: collection,
       });
       const itemId = item.id;
 

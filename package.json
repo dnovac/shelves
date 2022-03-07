@@ -1,7 +1,7 @@
 {
   "name": "shelves",
   "version": "1.0.0-beta.0",
-  "description": "Manage your wishlist, share with friends, schedule gifts for your friends",
+  "description": "Manage your collections, share with friends, schedule gifts for your friends based on their wishlists.",
   "main": "app.js",
   "repository": "https://github.com/dnovac/shelves.git",
   "author": "Dan Novac <danynovac@gmail.com>",
