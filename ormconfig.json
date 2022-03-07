@@ -4,10 +4,10 @@
   "port": 5432,
   "username": "admin",
   "password": "admin",
-  "database": "wishlistr",
+  "database": "shelves",
   "synchronize": true,
   "logging": false,
-  "entities": ["src/entity/*.ts", "modules/**/entity/*.ts"],
+  "entities": ["src/model/*.ts", "modules/**/model/*.ts"],
   "migrations": ["src/migration/*.ts", "src/migration/*.sql"],
   "cli": {
     "migrationsDir": "migration"
