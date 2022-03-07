@@ -34,10 +34,11 @@ export class User {
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
 
-    @Column({ select: false })
+    // @Column({ select: false })
+    @Column({ name: 'password' })
     password: string;
 
-    constructor(userOptions?: IUser) {
+    constructor(userOptions?: Omit<IUser, 'id'>) {
         if (userOptions) {
             this.username = userOptions.username;
             this.firstName = userOptions.firstName;
