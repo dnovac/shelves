@@ -4,7 +4,7 @@
   "port": 5432,
   "username": "admin",
   "password": "admin",
-  "database": "wishlistr",
+  "database": "shelves",
   "synchronize": true,
   "logging": false,
   "entities": ["src/model/*.ts", "modules/**/model/*.ts"],

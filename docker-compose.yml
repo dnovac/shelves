@@ -24,7 +24,7 @@ services:
 #      - default
 #    ports:
 #      - '8080:8080'
-#    container_name: wishlistr-server-container
+#    container_name: shelves-server-container
 
   pgadmin:
     image: dpage/pgadmin4
