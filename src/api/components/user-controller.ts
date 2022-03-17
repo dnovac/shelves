@@ -52,7 +52,7 @@ export class UserController {
 
       // Create token
       const token = jwt.sign(
-        { user_id: id, email },
+        { user_id: id, username },
         process.env.TOKEN_KEY as string,
         {
           expiresIn: process.env.TOKEN_EXPIRATION_TIME,

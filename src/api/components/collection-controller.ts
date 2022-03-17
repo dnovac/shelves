@@ -34,9 +34,9 @@ export class CollectionController {
     res.send(await this.collectionService.findById(collectionId));
   }
 
-  public async findByUsername(req: Request, res: Response): Promise<void> {
-    const username: string = req.params.username;
-    res.send(await this.collectionService.findByUsername(username));
+  public async findByUserId(req: Request, res: Response): Promise<void> {
+    const userId: string = req.params.id;
+    res.send(await this.collectionService.findByUserId(parseInt(userId)));
   }
 
   public async save(req: Request, res: Response): Promise<void> {
@@ -77,9 +77,9 @@ export class CollectionController {
       this.authService.isAuthorized(),
       (req, res) => this.findById(req, res)
     );
-    this.router.get('/user/:username',
+    this.router.get('/user/:id',
       this.authService.isAuthorized(),
-      (req, res) => this.findByUsername(req, res)
+      (req, res) => this.findByUserId(req, res)
     );
     this.router.post('/',
       this.authService.isAuthorized(),

@@ -26,11 +26,10 @@ export class CollectionService {
     });
   }
 
-  public async findByUsername(username: string): Promise<ICollection[] | undefined> {
+  public async findByUserId(userId: number): Promise<ICollection[] | undefined> {
     return this.collectionRepository.createQueryBuilder('collection')
       .leftJoin('collection.user', 'user')
-      .where('user.username = :username', { username })
-      .innerJoinAndSelect('collection.items', 'items')
+      .where('user.id = :userId', { userId })
       .getMany();
   }
 
