@@ -29,6 +29,7 @@ export class CollectionService {
   public async findByUserId(userId: number): Promise<ICollection[] | undefined> {
     return this.collectionRepository.createQueryBuilder('collection')
       .leftJoin('collection.user', 'user')
+      .leftJoinAndSelect('collection.items', 'items')
       .where('user.id = :userId', { userId })
       .getMany();
   }

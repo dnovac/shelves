@@ -32,6 +32,15 @@ export class ItemController {
     res.status(404).send(item);
   }
 
+  public async findByCollectionId(req: Request, res: Response): Promise<void> {
+    const collectionId: number = parseInt(req.params.id);
+    const items = await this.itemService.findByCollectionId(collectionId);
+    if (items) {
+      res.status(200).send(items);
+    }
+    res.status(404).send([]);
+  }
+
   public async save(req: Request, res: Response): Promise<void> {
     const itemOptions: IItem = req.body;
     try {
@@ -75,6 +84,10 @@ export class ItemController {
     this.router.get('/:id',
       this.authService.isAuthorized(),
       (req, res) => this.findById(req, res)
+    );
+    this.router.get('/collection/:id',
+      this.authService.isAuthorized(),
+      (req, res) => this.findByCollectionId(req, res)
     );
     this.router.post('/',
       this.authService.isAuthorized(),

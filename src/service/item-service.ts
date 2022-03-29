@@ -29,6 +29,13 @@ export class ItemService {
     });
   }
 
+  public async findByCollectionId(collectionId: number): Promise<IItem[] | undefined> {
+    return this.itemRepository.createQueryBuilder('items')
+      .leftJoin('items.collection', 'collection')
+      .where('collection.id = :collectionId', { collectionId })
+      .getMany();
+  }
+
   public async save(itemOptions: IItem): Promise<IItem> {
     const collectionId = itemOptions.collection?.id;
     let foundCollection;
