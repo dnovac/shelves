@@ -43,6 +43,12 @@ export class ItemController {
 
   public async save(req: Request, res: Response): Promise<void> {
     const itemOptions: IItem = req.body;
+
+    // TODO: validate body
+    if (!req.body.title || req.body.title === '') {
+      throw new Error('Title field is mandatory.');
+    }
+
     try {
       res.send(await this.itemService.save(
         itemOptions
