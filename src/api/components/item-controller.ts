@@ -33,20 +33,23 @@ export class ItemController {
   }
 
   public async findByCollectionId(req: Request, res: Response): Promise<void> {
-    const collectionId: number = parseInt(req.params.id);
-    const items = await this.itemService.findByCollectionId(collectionId);
-    if (items) {
-      res.status(200).send(items);
+    try {
+      const collectionId: number = parseInt(req.params.id);
+      const items = await this.itemService.findByCollectionId(collectionId);
+
+      res.status(200).send(items ? items : []);
+    } catch (err) {
+      res.status(500).send(`Error while trying to fetch items for collection ${req.params.id}.`);
     }
-    res.status(404).send([]);
   }
 
   public async save(req: Request, res: Response): Promise<void> {
     const itemOptions: IItem = req.body;
 
-    // TODO: validate body
+    // TODO: validate body with lib
     if (!req.body.title || req.body.title === '') {
-      throw new Error('Title field is mandatory.');
+      res.status(400).send('Title field is mandatory.');
+      return;
     }
 
     try {
@@ -54,7 +57,7 @@ export class ItemController {
         itemOptions
       ));
     } catch (e) {
-      logger.error(`An error occured while trying to save an item. Error: ${e}`);
+      logger.error(`An error occurred while trying to save an item. Error: ${e}`);
       res.status(500).send((e as Error).message);
     }
   }

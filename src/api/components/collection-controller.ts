@@ -28,15 +28,30 @@ export class CollectionController {
   public async findById(req: Request, res: Response): Promise<void> {
     const collectionId: number = parseInt(req.params.id);
     if (!collectionId) {
-      logger.error('missing id when trying to listById');
-      throw new Error('Id must be provided in order to fetch an collection by id.');
+      logger.error('Missing id when trying to listById');
+      res.status(400).send('Id must be provided in order to fetch an collection by id.');
+
+      return;
     }
-    res.send(await this.collectionService.findById(collectionId));
+
+    try {
+      res.send(await this.collectionService.findById(collectionId));
+    } catch (e) {
+      res.status(400).send('Id must be provided in order to fetch an collection by id.');
+
+    }
   }
 
   public async findByUserId(req: Request, res: Response): Promise<void> {
-    const userId: string = req.params.id;
-    res.send(await this.collectionService.findByUserId(parseInt(userId)));
+    try {
+      const userId: number = parseInt(req.params.id);
+      const collections: ICollection[] | undefined = await this.collectionService.findByUserId(userId);
+
+      res.send(collections ? collections : []);
+    } catch (err) {
+      res.status(500).send('Error while trying to fetch collections.');
+    }
+
   }
 
   public async save(req: Request, res: Response): Promise<void> {
