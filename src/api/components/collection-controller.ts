@@ -28,15 +28,30 @@ export class CollectionController {
   public async findById(req: Request, res: Response): Promise<void> {
     const collectionId: number = parseInt(req.params.id);
     if (!collectionId) {
-      logger.error('missing id when trying to listById');
-      throw new Error('Id must be provided in order to fetch an collection by id.');
+      logger.error('Missing id when trying to listById');
+      res.status(400).send('Id must be provided in order to fetch an collection by id.');
+
+      return;
     }
-    res.send(await this.collectionService.findById(collectionId));
+
+    try {
+      res.send(await this.collectionService.findById(collectionId));
+    } catch (e) {
+      res.status(400).send('Id must be provided in order to fetch an collection by id.');
+
+    }
   }
 
-  public async findByUsername(req: Request, res: Response): Promise<void> {
-    const username: string = req.params.username;
-    res.send(await this.collectionService.findByUsername(username));
+  public async findByUserId(req: Request, res: Response): Promise<void> {
+    try {
+      const userId: number = parseInt(req.params.id);
+      const collections: ICollection[] | undefined = await this.collectionService.findByUserId(userId);
+
+      res.send(collections ? collections : []);
+    } catch (err) {
+      res.status(500).send('Error while trying to fetch collections.');
+    }
+
   }
 
   public async save(req: Request, res: Response): Promise<void> {
@@ -77,9 +92,9 @@ export class CollectionController {
       this.authService.isAuthorized(),
       (req, res) => this.findById(req, res)
     );
-    this.router.get('/user/:username',
+    this.router.get('/user/:id',
       this.authService.isAuthorized(),
-      (req, res) => this.findByUsername(req, res)
+      (req, res) => this.findByUserId(req, res)
     );
     this.router.post('/',
       this.authService.isAuthorized(),

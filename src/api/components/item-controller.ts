@@ -32,14 +32,32 @@ export class ItemController {
     res.status(404).send(item);
   }
 
+  public async findByCollectionId(req: Request, res: Response): Promise<void> {
+    try {
+      const collectionId: number = parseInt(req.params.id);
+      const items = await this.itemService.findByCollectionId(collectionId);
+
+      res.status(200).send(items ? items : []);
+    } catch (err) {
+      res.status(500).send(`Error while trying to fetch items for collection ${req.params.id}.`);
+    }
+  }
+
   public async save(req: Request, res: Response): Promise<void> {
     const itemOptions: IItem = req.body;
+
+    // TODO: validate body with lib
+    if (!req.body.title || req.body.title === '') {
+      res.status(400).send('Title field is mandatory.');
+      return;
+    }
+
     try {
       res.send(await this.itemService.save(
         itemOptions
       ));
     } catch (e) {
-      logger.error(`An error occured while trying to save an item. Error: ${e}`);
+      logger.error(`An error occurred while trying to save an item. Error: ${e}`);
       res.status(500).send((e as Error).message);
     }
   }
@@ -75,6 +93,10 @@ export class ItemController {
     this.router.get('/:id',
       this.authService.isAuthorized(),
       (req, res) => this.findById(req, res)
+    );
+    this.router.get('/collection/:id',
+      this.authService.isAuthorized(),
+      (req, res) => this.findByCollectionId(req, res)
     );
     this.router.post('/',
       this.authService.isAuthorized(),
