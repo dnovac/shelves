@@ -74,7 +74,7 @@ describe('Items controller', () => {
       const item = await itemService.save({
         title: 'TestItem',
         url: 'test-url-item',
-        imageUrl: 'test-image-url-item',
+        owned: true,
         collection: collection,
       });
       const itemId = item.id;
