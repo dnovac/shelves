@@ -20,6 +20,9 @@ export class Collection {
   @Column({ length: 255, name: 'title' })
   title: string;
 
+  @Column({ type: 'text', name: 'description', nullable: true })
+  description?: string;
+
   @OneToMany(() => Item, item => item.collection, { nullable: true})
   items?: Item[];
 

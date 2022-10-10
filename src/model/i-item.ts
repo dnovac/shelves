@@ -4,6 +4,6 @@ export interface IItem {
     id?: number;
     title: string;
     url?: string;
-    imageUrl?: string;
+    owned: boolean;
     collection?: ICollection;
 }

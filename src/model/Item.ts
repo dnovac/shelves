@@ -13,8 +13,8 @@ export class Item {
   @Column({ type: 'text', name: 'url', nullable: true })
   url: string;
 
-  @Column({ type: 'text', name: 'image_url', nullable: true })
-  imageUrl: string;
+  @Column({ type: 'text', name: 'owned', default: false })
+  owned: boolean;
 
   @ManyToOne(() => Collection, collection => collection.items,
     { nullable: false, cascade: true, onDelete: 'CASCADE' })
@@ -26,10 +26,10 @@ export class Item {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  constructor(title: string, url: string, imageUrl: string, collection: Collection) {
+  constructor(title: string, url: string, owned: boolean, collection: Collection) {
     this.title = title;
     this.url = url;
-    this.imageUrl = imageUrl;
+    this.owned = owned;
     this.collection = collection;
     this.createdAt = new Date();
     this.updatedAt = new Date();
