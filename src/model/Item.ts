@@ -13,7 +13,7 @@ export class Item {
   @Column({ type: 'text', name: 'url', nullable: true })
   url: string;
 
-  @Column({ type: 'text', name: 'owned', default: false })
+  @Column({ type: 'boolean', name: 'owned', default: false })
   owned: boolean;
 
   @ManyToOne(() => Collection, collection => collection.items,
