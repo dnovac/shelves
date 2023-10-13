@@ -1,10 +1,10 @@
-import { Service } from 'typedi';
-import { InjectRepository } from 'typeorm-typedi-extensions';
-import { IItem } from '../model/i-item';
-import { ItemRepository } from '../repository/item-repository';
+import {Service} from 'typedi';
+import {InjectRepository} from 'typeorm-typedi-extensions';
+import {IItem} from '../model/i-item';
+import {ItemRepository} from '../repository/item-repository';
 import logger from "../config/logger";
-import { DeleteResult, UpdateResult } from 'typeorm';
-import { CollectionRepository } from '../repository/collection-repository';
+import {DeleteResult} from 'typeorm';
+import {CollectionRepository} from '../repository/collection-repository';
 
 @Service()
 export class ItemService {
@@ -32,7 +32,7 @@ export class ItemService {
   public async findByCollectionId(collectionId: number): Promise<IItem[] | undefined> {
     return this.itemRepository.createQueryBuilder('items')
       .leftJoin('items.collection', 'collection')
-      .where('collection.id = :collectionId', { collectionId })
+      .where('collection.id = :collectionId', {collectionId})
       .getMany();
   }
 
@@ -62,14 +62,17 @@ export class ItemService {
     }
   }
 
-  public async update(itemId: number, item: IItem): Promise<UpdateResult> {
+  public async update(itemId: number, itemData: IItem): Promise<any> {
     try {
-      return await this.itemRepository.update(
-        itemId,
-        {
-          ...item,
-        }
-      );
+      const item = await this.itemRepository.findOne(itemId);
+
+      if (!item) {
+        throw new Error(`No item with id ${itemId} found in the database!`);
+      }
+
+      return this.itemRepository.update({
+        id: item.id,
+      }, itemData);
     } catch (err) {
       logger.error(`Error while updating item: ${err}`)
       throw new Error(`Error while updating item: ${err}`)

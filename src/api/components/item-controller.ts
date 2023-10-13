@@ -67,7 +67,7 @@ export class ItemController {
     if (!itemId) {
       throw new Error('An id must be provided for an update.');
     }
-    const item: IItem = req.body;
+    const item: IItem = req.body.item;
     res.send(await this.itemService.update(itemId, item));
   }
 
